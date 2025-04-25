@@ -55,6 +55,11 @@ public class ThumbnailDTO
 		return ThumbnailType.Documentary;
 	}
 
+    public string toString()
+    {
+        return $"ThumbnailDTO: {show_id}, {title}, {description}, {city}, {videoDuration}, {thumbnailUrl}, {thumbnailIconUrl}, {showUrls}, {isLowQualitySupportedOnDevice}, {isMediumQualitySupportedOnDevice}, {isHighQualitySupportedOnDevice}, {highQualityVideoKeyAWSObjectId}, {mediumQualityVideoKeyAWSObjectId}, {lowQualityVideoKeyAWSObjectId}, {AdaptiveStreamVideoKeyAWSObjectId}, {isAarthi}, {isDocumentary}, {hindiTitleText}, {hindiCityText}, {MediumQualityMediaSize}, {HighQualityMediaSize}, {isNewVideo}, {isLiveShow}, {isPrevLiveShowThumbnail}, {liveFileTimingTextUrl}, {liveFileTimingText}, {isAdaptiveStreamingEnabled}";
+    }
+
 }
 
 public class ShowUrls

@@ -595,6 +595,7 @@ public class HomeManager : MonoBehaviour
 			    {
 			    	//if (AppConstants.disactiveVideoShowIds.Contains(thumbnail.Key) || thumbnail.Key == "5") continue;
 			    	ThumbnailDTO thumbnailDTO = convertThumbnailDatatoThumbnailDTO(thumbnail.Value, thumbnail.Key);
+                    Logs.Log(thumbnailDTO.toString());
 			    	// updateDeviceSupportedQuality(thumbnailDTO);
 			    	// fillAndInstantiateThumbnailData(thumbnailDTO);
                     thumbnailDTOsList.Add(thumbnailDTO);
@@ -607,7 +608,7 @@ public class HomeManager : MonoBehaviour
 		}
 		catch
 		{
-            Debug.LogWarning("Error loading the video data from json");
+            Logs.LogWarning("Error loading the video data from json");
             loadFromResources();
         }
     }
