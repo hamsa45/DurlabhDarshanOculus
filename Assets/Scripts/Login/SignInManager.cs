@@ -7,7 +7,7 @@ using co.techxr.unity.model;
 using co.techxr.unity.network;
 using co.techxr.unity.exceptions;
 using System;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
 
 public class SignInManager : MonoBehaviour
@@ -75,14 +75,16 @@ public class SignInManager : MonoBehaviour
             logInWarningPanel.gameObject.SetActive(false);
             ToastManager.Toast.ErrorToast(ex.message);
             loaderXR.StopLoader();
-            Debug.Log(ex.message);
+            Logs.Log(ex.message);
         });
     }
 
     public void ChangeScene(int index)
     {
-        SceneManager.LoadScene(index);
+        // SceneManager.LoadScene(index);
+        SceneLoader.LoadScene(index);
     }
+
     private void handleFailure(XrException xrException)
     {
        //ToastManager.Toast.ErrorToast(xrException.message);
@@ -98,7 +100,7 @@ public class SignInManager : MonoBehaviour
         ProjectMetadata.profile = loginResponse.profile;
         try
         {
-            Debug.Log("Profile: " + loginResponse.profile.firstName);
+            Logs.Log("Profile: " + loginResponse.profile.firstName);
             
             
 
@@ -112,7 +114,7 @@ public class SignInManager : MonoBehaviour
             //  Exchange profile id with blockengine userID
             if (loginResponse.profile == null || loginResponse.profile.id == 0)
             {
-                Debug.Log("toast : Fatal Error");
+                Logs.Log("toast : Fatal Error");
                 ToastManager.Toast.ErrorToast("Fatal Error, Please Contact Support");
                 //i_Toast_XR.GetComponent<I_Toast_XR1>().ShowToast(false, "Fatal Error, Please Contact Support");
             }
@@ -130,28 +132,14 @@ public class SignInManager : MonoBehaviour
                 ProjectMetadata.loginResponse = savedLoginResponse;
                 ToastManager.Toast.ErrorToast("Successful Login");
 
-                //if (UserContentManager.instance != null)
-                //{
-                //    UserContentManager.instance.email = loginResponse.profile.email;
-                //    UserContentManager.instance.fullname = string.Concat(loginResponse.profile.firstName, loginResponse.profile.lastName);
-                //    //ucmanager.checkIfPurchasedUser();
-                //}
-                //ChangeScene(1);
-                SceneManager.LoadScene("DeviceSupportCheckAfterLogin");
-                //if (!PlayerPrefs.HasKey("ControllerTutorial") || PlayerPrefs.GetInt("ControllerTutorial") == 0)
-                //{
-                //    SceneManager.LoadScene("ControllerTutorial");
-                //}
-                //else
-                //{
-                //    SceneManager.LoadScene("HomeScene");
-                //}
+                // SceneManager.LoadScene(AppConstants.Scenes.DeviceSupportCheckAfterLogin);
+                SceneLoader.LoadScene(AppConstants.Scenes.Home);
             }
         }
         catch (XrException e)
         {
             // show toast
-           Debug.Log("toast : " + e.message);
+           Logs.Log("toast : " + e.message);
            ToastManager.Toast.ErrorToast(e.message);
             //Debug.Log(i_Toast_XR + "ksdbjkabdkj");
             //i_Toast_XR.GetComponent<I_Toast_XR1>().ShowToast(false, e.message);
@@ -159,7 +147,7 @@ public class SignInManager : MonoBehaviour
         catch (Exception e)
         {
             // Show 'Unexpected error' message
-            Debug.Log("unexpected toast : " + e.Message);
+            Logs.Log("unexpected toast : " + e.Message);
            ToastManager.Toast.ErrorToast(e.Message);
             //i_Toast_XR.GetComponent<I_Toast_XR1>().ShowToast(false, e.Message);
         }
