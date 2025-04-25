@@ -32,6 +32,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4155300884431589612}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -153,6 +154,7 @@ RectTransform:
   - {fileID: 6229108104254111301}
   - {fileID: 8198321358193034130}
   m_Father: {fileID: 4222728318368581435}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -230,6 +232,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8142260408386763159}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -336,6 +339,7 @@ RectTransform:
   - {fileID: 3139091304612772425}
   - {fileID: 4222728318368581435}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -402,14 +406,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3310560060103162674}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a84f41d56291f5448c2f914017c12a9, type: 3}
+  m_Script: {fileID: 11500000, guid: 781cacda39acaf44896292e4c7ec18a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ThumbnailImage: {fileID: 64296947012135076}
+  thumbnailImage: {fileID: 64296947012135076}
+  videoNameText: {fileID: 4958468696707242649}
+  videoDurationText: {fileID: 2271022254803011244}
+  videoLocationText: {fileID: 7088363925415246506}
   button: {fileID: 1115020194537750005}
-  Title: {fileID: 4958468696707242649}
-  Duration: {fileID: 2271022254803011244}
-  Location: {fileID: 7088363925415246506}
 --- !u!1 &3444432017537360476
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,6 +447,7 @@ RectTransform:
   - {fileID: 7101732114843975841}
   - {fileID: 4826093572308745053}
   m_Father: {fileID: 746908508942617971}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -480,8 +485,7 @@ MonoBehaviour:
   m_text: Shri Mahakaleshwar Sandhya Aarti
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2a40156820caef446bab6e1dec1b06ae, type: 2}
-  m_sharedMaterial: {fileID: 3200875093214971782, guid: 2a40156820caef446bab6e1dec1b06ae,
-    type: 2}
+  m_sharedMaterial: {fileID: 3200875093214971782, guid: 2a40156820caef446bab6e1dec1b06ae, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -578,6 +582,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 746908508942617971}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -653,6 +658,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8198321358193034130}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -690,8 +696,7 @@ MonoBehaviour:
   m_text: Ujjain
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9a0b5c4538d740a40bb69acdeb02da74, type: 2}
-  m_sharedMaterial: {fileID: 3385574513752512680, guid: 9a0b5c4538d740a40bb69acdeb02da74,
-    type: 2}
+  m_sharedMaterial: {fileID: 3385574513752512680, guid: 9a0b5c4538d740a40bb69acdeb02da74, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -791,6 +796,7 @@ RectTransform:
   - {fileID: 8142260408386763159}
   - {fileID: 746908508942617971}
   m_Father: {fileID: 4155300884431589612}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -880,6 +886,7 @@ RectTransform:
   m_Children:
   - {fileID: 4377596949751079712}
   m_Father: {fileID: 4222728318368581435}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -968,6 +975,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8198321358193034130}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -1005,8 +1013,7 @@ MonoBehaviour:
   m_text: 00:00
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 98d98bf5fe004de4d8ac5c0ba4f13151, type: 2}
-  m_sharedMaterial: {fileID: 8660236520355402166, guid: 98d98bf5fe004de4d8ac5c0ba4f13151,
-    type: 2}
+  m_sharedMaterial: {fileID: 8660236520355402166, guid: 98d98bf5fe004de4d8ac5c0ba4f13151, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
