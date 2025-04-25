@@ -70,7 +70,6 @@ public class SignInManager : MonoBehaviour
         loginDto.password = password.text;
         /*        loginDto.email = "abhishekprabhat@debugfactory.com";
                 loginDto.password = "4222";*/
-
         loaderXR.StartLoader();
         authService.login(loginDto, handleLoginResponse, ex=> {
             logInWarningPanel.gameObject.SetActive(false);
@@ -78,8 +77,8 @@ public class SignInManager : MonoBehaviour
             loaderXR.StopLoader();
             Debug.Log(ex.message);
         });
-
     }
+
     public void ChangeScene(int index)
     {
         SceneManager.LoadScene(index);

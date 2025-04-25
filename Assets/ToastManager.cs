@@ -6,6 +6,19 @@ using TMPro;
 public class ToastManager : MonoBehaviour
 {
     public static ToastManager Toast;
+
+    // public static ToastManager Toast
+    // {
+    //     get
+    //     {
+    //         if(toast == null)
+    //         {
+    //             toast = new GameObject("ToastManager").AddComponent<ToastManager>();
+    //             DontDestroyOnLoad(toast);
+    //         }
+    //         return toast;
+    //     }
+    // }
     /// <summary>
     /// ////updated
     /// </summary>
@@ -20,7 +33,6 @@ public class ToastManager : MonoBehaviour
     private void Start()
     {
         Toast = this;
-        
     }
 
     private void SelectToaster(GameObject toast, float toastTime, string text = "")

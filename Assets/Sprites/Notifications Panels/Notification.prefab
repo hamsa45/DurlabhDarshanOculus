@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 89489278723764730}
-  - component: {fileID: 3663760349822981619}
+  - component: {fileID: 5892002169103384667}
   m_Layer: 5
   m_Name: Notification
   m_TagString: Toast
@@ -40,7 +40,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3663760349822981619
+--- !u!114 &5892002169103384667
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 89489278723764731}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab6d0db9d57f04041bd2873f07eb527f, type: 3}
+  m_Script: {fileID: 11500000, guid: 195b34969d7a7ce45bcfd53ba08566f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   InfoToastObject: {fileID: 89489278815200415}

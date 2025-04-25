@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/SignUp.unity
+    guid: e79a21328128a4b4eaddf43f8dab640f
   m_configObjects: {}
