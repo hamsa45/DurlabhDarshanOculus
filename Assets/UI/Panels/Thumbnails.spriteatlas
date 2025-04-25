@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Thumbnails
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 1024
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 2
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_IgnorePlatformSupport: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: ada2698763c462f4eb7422b7a0e35b2b, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - a48e8561a6d49bc46b9a7d87adf228c1: 21300000
+    - 52801a2298c7218459258424516f7ef7: 21300000
+    - ad1a44e255b44ec448894e8823bb8ee2: 21300000
+    - 0b9bb6752870cc748a2274bb0d76c912: 21300000
+    - 81232e77444eb944dbbd5c2d8b9ca567: 21300000
+    - a33dbfe839e086a4a9aea509af08216c: 21300000
+    - 66ad0549f8aebfc44908b3636fae0c1e: 21300000
+    - 0f2711c92c05c154b953c2e5587a3a11: 21300000
+    - 7b49706a78749df4eb50ed3741ce79e8: 21300000
+    - dc8a18aad6861134b86a2d07de626b29: 21300000
+    - 3b33f24bf0f53ad4eb745834b261ad1f: 21300000
+    - 0d34c57b1a3a6e24a9b87f271419defc: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: a48e8561a6d49bc46b9a7d87adf228c1, type: 3}
+  - {fileID: 21300000, guid: 52801a2298c7218459258424516f7ef7, type: 3}
+  - {fileID: 21300000, guid: ad1a44e255b44ec448894e8823bb8ee2, type: 3}
+  - {fileID: 21300000, guid: 0b9bb6752870cc748a2274bb0d76c912, type: 3}
+  - {fileID: 21300000, guid: 81232e77444eb944dbbd5c2d8b9ca567, type: 3}
+  - {fileID: 21300000, guid: a33dbfe839e086a4a9aea509af08216c, type: 3}
+  - {fileID: 21300000, guid: 66ad0549f8aebfc44908b3636fae0c1e, type: 3}
+  - {fileID: 21300000, guid: 0f2711c92c05c154b953c2e5587a3a11, type: 3}
+  - {fileID: 21300000, guid: 7b49706a78749df4eb50ed3741ce79e8, type: 3}
+  - {fileID: 21300000, guid: dc8a18aad6861134b86a2d07de626b29, type: 3}
+  - {fileID: 21300000, guid: 3b33f24bf0f53ad4eb745834b261ad1f, type: 3}
+  - {fileID: 21300000, guid: 0d34c57b1a3a6e24a9b87f271419defc, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Pune
+  - Raisen
+  - Bhojpur
+  - Chitrakoot
+  - Ujjain
+  - Maihar
+  - Omkareshwar
+  - Trimbak
+  - Indore
+  - Koraput
+  - Ayodhya
+  - Varanasi
+  m_RenderDataMap: {}
+  m_Tag: Thumbnails
+  m_IsVariant: 0
