@@ -31,13 +31,6 @@ public class AppConstants : MonoBehaviour
     {
          "3", "11"
     };
-
-    public static class Scenes
-    {
-        public const string Home = "Home";
-        public const string Login = "Login";
-        public const string QRActivation = "QRActivation";
-    }
 }
 
 public static class Logs
@@ -74,6 +67,13 @@ public static class Logs
             Debug.LogException(exception);
         }
     }
+}
+
+public static class Scenes
+{
+     public const string Home = "Home_UI";
+    public const string Login = "Login";
+    public const string QRActivation = "QRActivation";
 }
 
 public static class SceneLoader

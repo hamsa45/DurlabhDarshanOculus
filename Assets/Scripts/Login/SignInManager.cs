@@ -79,11 +79,11 @@ public class SignInManager : MonoBehaviour
         });
     }
 
-    public void ChangeScene(int index)
-    {
-        // SceneManager.LoadScene(index);
-        SceneLoader.LoadScene(index);
-    }
+    // public void ChangeScene(string sceneName)
+    // {
+    //     // SceneManager.LoadScene(index);
+    //     SceneLoader.LoadScene(sceneName);
+    // }
 
     private void handleFailure(XrException xrException)
     {
@@ -133,7 +133,7 @@ public class SignInManager : MonoBehaviour
                 ToastManager.Toast.ErrorToast("Successful Login");
 
                 // SceneManager.LoadScene(AppConstants.Scenes.DeviceSupportCheckAfterLogin);
-                SceneLoader.LoadScene(AppConstants.Scenes.Home);
+                SceneLoader.LoadScene(Scenes.Home);
             }
         }
         catch (XrException e)

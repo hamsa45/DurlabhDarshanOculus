@@ -832,13 +832,13 @@ public class HomeManager : MonoBehaviour
     {
         authService.logout();
         PlayerPrefs.DeleteAll();
-        SceneManager.LoadScene(AppConstants.Scenes.Login);
+        SceneLoader.LoadScene(Scenes.Login);
     }
 
     // in app subscription
     public void onClickActivateProduct()
     {
-        SceneManager.LoadScene(AppConstants.Scenes.QRActivation);
+        SceneLoader.LoadScene(Scenes.QRActivation);
     }
 
     public void onClickAccountsPage()
