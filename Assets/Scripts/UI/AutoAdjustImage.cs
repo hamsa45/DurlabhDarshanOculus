@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(AspectRatioFitter), typeof(Graphic))]
-public class AutoAdjustRawImage : MonoBehaviour
+public class AutoAdjustImage : MonoBehaviour
 {
     public Graphic targetGraphic;  // Reference to the Image or RawImage component you want to adjust
     private AspectRatioFitter aspectRatioFitter;

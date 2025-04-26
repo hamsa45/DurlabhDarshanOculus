@@ -5,25 +5,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
-public class VideoQualityOptions
-{
-    public VideoLinkInfo Quality6K { get; set; }
-    public VideoLinkInfo Quality4K { get; set; }
-    public VideoLinkInfo Quality2K { get; set; }
-    public VideoLinkInfo AdaptiveStream { get; set; }
-}
 
-public class VideoLinkInfo 
-{
-    public string AwsKey { get; set; }
-    public string Url { get; set; }
-    public string Size { get; set; }
-}
 public class VideoPlayer : MonoBehaviour
 {
     public static VideoPlayer instance;
     public MediaPlayer mediaPlayer;
-    public VideoQualityOptions videoQualityOptions;
 
     public GameObject VideoBufferingLoader;
     public GameObject InternetPanel;
@@ -39,8 +25,12 @@ public class VideoPlayer : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        
-        mediaPlayer.OpenMedia(MediaPathType.AbsolutePathOrURL, videoQualityOptions.Quality6K.Url, true);
+        PlayVideo();
+    }
+
+    // Play video from the selected video panel
+    private void PlayVideo()
+    {
         mediaPlayer.Play();
         mediaPlayer.Events.AddListener(HandleEvent);
     }

@@ -13,6 +13,8 @@ public enum VideoState
 
 public class SelectedVideoPanel : MonoBehaviour
 {
+    public static SelectedVideoPanel instance;
+
     [Header("Texts")]
     [SerializeField] private TextMeshProUGUI videoNameText;
     [SerializeField] private TextMeshProUGUI videoLocationText;
@@ -43,19 +45,28 @@ public class SelectedVideoPanel : MonoBehaviour
 
     private VideoState videoState = VideoState.NotDownloaded;
 
+
+    void Awake()
+    {
+        if(instance != null)
+            Destroy(instance.gameObject);
+        
+        instance = this;
+    }
+
     public void SetData(VideoData videoData)
     {
         if (videoLocationText != null)
             videoLocationText.text = videoData.videoLocation;
 
         if (videoDurationText != null)
-            videoDurationText.text = videoData.videoDuration;
+            videoDurationText.text = VideoData.VideoDurationString(videoData.videoDuration);
 
         if (videoThumbnailImage != null)
             videoThumbnailImage.sprite = videoData.thumbnail;
 
         if (videoDurationDescriptionText != null)
-            videoDurationDescriptionText.text = videoData.videoDurationDescription;
+            videoDurationDescriptionText.text = videoData.videoDescription;
 
         if (videoNameText != null)
             videoNameText.text = videoData.videoName;
@@ -75,8 +86,13 @@ public class SelectedVideoPanel : MonoBehaviour
         if (backButton != null)
             backButton.onClick.AddListener(() => BackButton());
             
-
+        CheckVideoState(videoData);
         UpdateUI();
+    }
+
+    private void CheckVideoState(VideoData videoData){
+
+        // Check if the video is downloaded
     }
 
     public IEnumerator UpdateSelectedVideo(VideoData videoData)
@@ -128,6 +144,6 @@ public class SelectedVideoPanel : MonoBehaviour
 
     private void BackButton()
     {
-        this.gameObject.SetActive(false);
+        UIManagerMono.instance.ShowVideoListPanel();
     }
 }

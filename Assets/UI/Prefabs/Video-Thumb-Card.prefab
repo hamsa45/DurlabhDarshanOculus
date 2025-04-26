@@ -410,6 +410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thumbnailImage: {fileID: 64296947012135076}
+  autoAdjustRawImage: {fileID: 3259493328414989542}
   videoNameText: {fileID: 4958468696707242649}
   videoDurationText: {fileID: 2271022254803011244}
   videoLocationText: {fileID: 7088363925415246506}
