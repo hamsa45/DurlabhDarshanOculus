@@ -54,48 +54,48 @@ public class SelectedVideoPanel : MonoBehaviour
         instance = this;
     }
 
-    public void SetData(VideoData videoData)
+    public void SetData(ThumbnailDTO thumbnailDTO)
     {
         if (videoLocationText != null)
-            videoLocationText.text = videoData.videoLocation;
+            videoLocationText.text = thumbnailDTO.city;
 
         if (videoDurationText != null)
-            videoDurationText.text = VideoData.VideoDurationString(videoData.videoDuration);
+            videoDurationText.text = VideoThumbnailPanel.VideoDurationString(thumbnailDTO.videoDuration);
 
         if (videoThumbnailImage != null)
-            videoThumbnailImage.sprite = videoData.thumbnail;
+            //videoThumbnailImage.sprite = thumbnailDTO.thumbnail;
 
         if (videoDurationDescriptionText != null)
-            videoDurationDescriptionText.text = videoData.videoDescription;
+            videoDurationDescriptionText.text = thumbnailDTO.description;
 
         if (videoNameText != null)
-            videoNameText.text = videoData.videoName;
+            videoNameText.text = thumbnailDTO.title;
 
         if (downloadButton != null)
-            downloadButton.onClick.AddListener(() => DownloadVideo(videoData));
+            downloadButton.onClick.AddListener(() => DownloadVideo(thumbnailDTO));
 
         if (downloadCancelButton != null)
-            downloadCancelButton.onClick.AddListener(() => CancelDownload(videoData));
+            downloadCancelButton.onClick.AddListener(() => CancelDownload(thumbnailDTO));
 
         if (playButton != null)
-            playButton.onClick.AddListener(() => PlayVideo(videoData));
+            playButton.onClick.AddListener(() => PlayVideo(thumbnailDTO));
 
         if (deleteButton != null)
-            deleteButton.onClick.AddListener(() => DeleteVideo(videoData));
+            deleteButton.onClick.AddListener(() => DeleteVideo(thumbnailDTO));
 
         if (backButton != null)
             backButton.onClick.AddListener(() => BackButton());
             
-        CheckVideoState(videoData);
+        CheckVideoState(thumbnailDTO);
         UpdateUI();
     }
 
-    private void CheckVideoState(VideoData videoData){
+    private void CheckVideoState(ThumbnailDTO thumbnailDTO){
 
         // Check if the video is downloaded
     }
 
-    public IEnumerator UpdateSelectedVideo(VideoData videoData)
+    public IEnumerator UpdateSelectedVideo(ThumbnailDTO thumbnailDTO)
     {
         LoadingPanel.SetActive(true);
         MainCanvasGroup.alpha = 0;
@@ -122,22 +122,22 @@ public class SelectedVideoPanel : MonoBehaviour
             downloadingProgressText.text = $"{progress * 100}%";
     }
 
-    private void DownloadVideo(VideoData videoData)
+    private void DownloadVideo(ThumbnailDTO thumbnailDTO)
     {
         // Download the video           
     }
 
-    private void CancelDownload(VideoData videoData)
+    private void CancelDownload(ThumbnailDTO thumbnailDTO)
     {
         // Cancel the download
     }
 
-    private void PlayVideo(VideoData videoData) 
+    private void PlayVideo(ThumbnailDTO thumbnailDTO) 
     {
         // Play the video
     }
 
-    private void DeleteVideo(VideoData videoData)
+    private void DeleteVideo(ThumbnailDTO thumbnailDTO)
     {
         // Delete the video
     }

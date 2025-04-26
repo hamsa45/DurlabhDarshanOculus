@@ -2,24 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-[System.Serializable]
-public class VideoData
-{
-    public string videoName;
-    public int videoDuration;
-    public string videoLocation;
-    public Sprite thumbnail;
-    public string videoPath;
-    public string videoDescription;
-
-    public static string VideoDurationString(int videoDuration){
-        int minutes = (videoDuration % 3600) / 60;
-        int seconds = videoDuration % 60;
-        return $"{minutes}:{seconds}";
-    }
-}
-
-public class VideoThumbnailPanel : ThumbnailPanel<VideoData>
+public class VideoThumbnailPanel : ThumbnailPanel<ThumbnailDTO>
 {
     [SerializeField] private TextMeshProUGUI videoNameText;
     [SerializeField] private TextMeshProUGUI videoDurationText;
@@ -32,19 +15,25 @@ public class VideoThumbnailPanel : ThumbnailPanel<VideoData>
         if (data != null)
         {
             if (thumbnailImage != null){
-                thumbnailImage.sprite = data.thumbnail;
-                autoAdjustRawImage.adjustImage(thumbnailImage);
+                //thumbnailImage.sprite = data.thumbnail;
+                //autoAdjustRawImage.adjustImage(thumbnailImage);
             }
             
             if (videoNameText != null)
-                videoNameText.text = data.videoName;
+                videoNameText.text = data.title;
 
             if (videoDurationText != null)
-                videoDurationText.text = VideoData.VideoDurationString(data.videoDuration);
+                videoDurationText.text = VideoDurationString(data.videoDuration);
 
             if (videoLocationText != null)
-                videoLocationText.text = data.videoLocation;
+                videoLocationText.text = data.city;
         }
+    }
+
+    public static string VideoDurationString(int videoDuration){
+        int minutes = (videoDuration % 3600) / 60;
+        int seconds = videoDuration % 60;
+        return $"{minutes}:{seconds}";
     }
 
     private void Start()

@@ -5455,6 +5455,80 @@ RectTransform:
   m_AnchoredPosition: {x: -12.5, y: 0}
   m_SizeDelta: {x: -25, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &2042255164
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2042255165}
+  - component: {fileID: 2042255166}
+  m_Layer: 0
+  m_Name: Home UI Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2042255165
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042255164}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.12583463, y: 1.6091297, z: 1.6292201}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2042255166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042255164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d66c030c21aa12946ae750532edf6152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoGridManager: {fileID: 1595540609}
+  name: {fileID: 0}
+  email: {fileID: 0}
+  phoneNumber: {fileID: 0}
+  ThumbnailPrefab: {fileID: 0}
+  ARCoreThumbnailPrefab: {fileID: 0}
+  ThumbnailParentContent: {fileID: 0}
+  ARCubeThumbnailParentContent: {fileID: 0}
+  LaunchPage: {fileID: 0}
+  NetworkErrorPage: {fileID: 0}
+  retryButton: {fileID: 0}
+  iconAtlas: {fileID: 0}
+  thumbnailAtlas: {fileID: 0}
+  ActivationPopUps: {fileID: 0}
+  AccountsPage: {fileID: 0}
+  SubscribedInfo: {fileID: 0}
+  remainingDays: {fileID: 0}
+  purchasedStartDate: {fileID: 0}
+  purchaseEndDate: {fileID: 0}
+  UnsubscribedInfo: {fileID: 0}
+  subscriptionCheckLoader: {fileID: 0}
+  AR_SceneLoader_Parent: {fileID: 0}
+  AR_SceneLoader_FillImg: {fileID: 0}
+  DeviceConfigStatus: {fileID: 0}
+  DeviceConfigStatusAccountsPage: {fileID: 0}
+  nonSupportedInfoText: {fileID: 0}
+  purchaseNow_btn: {fileID: 0}
+  appVersion_txt: {fileID: 0}
+  isBeginVideoPlayerPressed: 0
+  hasToLoadVRScene: 1
 --- !u!1 &2055603978
 GameObject:
   m_ObjectHideFlags: 0

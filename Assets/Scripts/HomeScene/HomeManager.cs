@@ -15,6 +15,7 @@ using UnityEngine.Events;
 
 public class HomeManager : MonoBehaviour
 {
+    public VideoGridManager videoGridManager;
     public GameObject name;
     public GameObject email;
     public GameObject phoneNumber;
@@ -89,33 +90,33 @@ public class HomeManager : MonoBehaviour
     private List<ThumbnailDTO> thumbnailDTOs = new List<ThumbnailDTO>();
     
     public List<ThumbnailDTO> ThumbnailDTOs => thumbnailDTOs;
+
+
     private void Awake()
-    {
-        //Screen.brightness = 0.4f;
-        //StopXR();
-        //Screen.orientation = ScreenOrientation.Portrait;
-        authService = AuthService.getInstance();
-        if (ProjectMetadata.profile != null)
-        {
-            name.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.firstName;
-            email.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.email;
-            phoneNumber.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.phone.phoneNumber;
-        }
+    {   
+        initializeHomepage();
+        // authService = AuthService.getInstance();
+        // if (ProjectMetadata.profile != null)
+        // {
+        //     name.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.firstName;
+        //     email.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.email;
+        //     phoneNumber.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.phone.phoneNumber;
+        // }
 
-        checkInternetConnectionOnAwake();
-        if(isInternetConnected || NetworkMonitor.Instance.IsConnected)
-        {
-            Debug.LogWarning("internet is connected on awake");
-            if(!thumbnailsPopulationStarted)
-            {
-                thumbnailsPopulationStarted = true;
-                initializeHomepage();
-            }
-        }
+        // checkInternetConnectionOnAwake();
+        // if(isInternetConnected || NetworkMonitor.Instance.IsConnected)
+        // {
+        //     Debug.LogWarning("internet is connected on awake");
+        //     if(!thumbnailsPopulationStarted)
+        //     {
+        //         thumbnailsPopulationStarted = true;
+                
+        //     }
+        // }
 
-        retryButton.onClick.AddListener(()=> { RetryInternetCheck(); });
-        retryText = retryButton.transform.GetChild(0).gameObject;
-        checkingConnectionText = retryButton.transform.GetChild(1).gameObject;
+        // retryButton.onClick.AddListener(()=> { RetryInternetCheck(); });
+        // retryText = retryButton.transform.GetChild(0).gameObject;
+        // checkingConnectionText = retryButton.transform.GetChild(1).gameObject;
     }
 
     private void checkInternetConnectionOnAwake()
@@ -177,7 +178,18 @@ public class HomeManager : MonoBehaviour
 		//updateFreeDemoThumbnailDTO();
 		//populateWeeklyLiveThumbnails();
 		//populateARThumbnails();
-		populateMenuFromInAppData();
+		populateMenuFromInAppData(thumbnailDTOsList => {
+            if(thumbnailDTOsList.Count > 0)
+            {
+                videoGridManager.LoadVideos(thumbnailDTOsList);
+                this.thumbnailDTOs = thumbnailDTOsList;
+                OnThumbnailsPopulated?.Invoke();
+            }
+            else
+            {
+                Debug.LogWarning("No thumbnails found");
+            }
+		});
 		#endregion
 
 		
@@ -569,7 +581,7 @@ public class HomeManager : MonoBehaviour
 	// 	}
 	// }
 
-    private void populateMenuFromInAppData()
+    private void populateMenuFromInAppData(Action<List<ThumbnailDTO>> callback)
 	{
 		try
 		{
@@ -604,6 +616,7 @@ public class HomeManager : MonoBehaviour
                 this.thumbnailDTOs = thumbnailDTOsList;
 			
                 OnThumbnailsPopulated?.Invoke();
+                callback(thumbnailDTOsList);
             });
 		}
 		catch
