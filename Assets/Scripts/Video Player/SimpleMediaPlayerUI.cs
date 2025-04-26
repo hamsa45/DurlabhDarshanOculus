@@ -12,7 +12,7 @@ public class SimpleMediaPlayerUI : MonoBehaviour
     public CanvasGroup videoPlayerControls;
     public MediaPlayer mediaPlayer;
     public VolumeControlVideoPlayer volumeController;
-    public SettingVideoPlayer settingsController;
+    //public SettingVideoPlayer settingsController;
 
     [Header("UI")]
 
@@ -231,14 +231,14 @@ public class SimpleMediaPlayerUI : MonoBehaviour
     /// <summary>
     /// Call this method when the current video changes to update the quality options
     /// </summary>
-    public void UpdateQualityOptions()
-    {
-        // Forward to settings controller if available
-        if (settingsController != null)
-        {
-            settingsController.UpdateQualityOptions();
-        }
-    }
+    // public void UpdateQualityOptions()
+    // {
+        //Forward to settings controller if available
+        // if (settingsController != null)
+        // {
+            // settingsController.UpdateQualityOptions();
+        // }
+    // }
 
     private void LoadHomeScene()
     {
