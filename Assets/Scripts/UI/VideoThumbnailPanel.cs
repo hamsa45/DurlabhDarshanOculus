@@ -10,15 +10,24 @@ public class VideoThumbnailPanel : ThumbnailPanel<ThumbnailDTO>
     [SerializeField] private Button button;
     [SerializeField] private AutoAdjustImage autoAdjustRawImage;
 
-    protected override void UpdateUI()
+    [SerializeField] private GameObject thumbnailLoaderPanel;
+
+
+    private Texture thumbnailTexture;
+
+    void Awake()
+    {
+        thumbnailTexture = thumbnailImage.texture;
+    }
+
+    protected override async void UpdateUI()
     {
         if (data != null)
         {
-            if (thumbnailImage != null){
-                //thumbnailImage.sprite = data.thumbnail;
-                //autoAdjustRawImage.adjustImage(thumbnailImage);
+            if (thumbnailLoaderPanel != null)
+            {
+                thumbnailLoaderPanel.SetActive(true);
             }
-            
             if (videoNameText != null)
                 videoNameText.text = data.title;
 
@@ -27,6 +36,25 @@ public class VideoThumbnailPanel : ThumbnailPanel<ThumbnailDTO>
 
             if (videoLocationText != null)
                 videoLocationText.text = data.city;
+
+            if (thumbnailImage != null){
+                gameObject.TryGetComponent<ImageLoader>(out ImageLoader loader);
+                
+                if(loader == null){
+                    loader = gameObject.AddComponent<ImageLoader>();
+                }
+                loader.setUp(thumbnailImage, data.thumbnailUrl);
+                await loader.StartLoadingImage();
+                if(thumbnailImage.texture == null){
+                    thumbnailImage.texture = thumbnailTexture;
+                }
+                autoAdjustRawImage.adjustImage(thumbnailImage);
+            }
+
+            if (thumbnailLoaderPanel != null)
+            {
+                thumbnailLoaderPanel.SetActive(false);
+            }
         }
     }
 

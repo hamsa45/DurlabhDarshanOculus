@@ -4696,7 +4696,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a60a87fdfdc02740bac0537f4096ffe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemsPerPage: 5
+  itemsPerPage: 6
   thumbnailPrefab: {fileID: 6653540775563275511, guid: 687d166cca3d9234a8b9dbda9fad6bc9, type: 3}
   thumbnailContainer: {fileID: 2076051422}
   nextButton: {fileID: 1082499806}

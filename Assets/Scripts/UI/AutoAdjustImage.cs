@@ -6,11 +6,7 @@ public class AutoAdjustImage : MonoBehaviour
 {
     public Graphic targetGraphic;  // Reference to the Image or RawImage component you want to adjust
     private AspectRatioFitter aspectRatioFitter;
-    
-    void Start()
-    {
-        adjustImage(targetGraphic);
-    }
+
 
     public void adjustImage(Graphic targetGraphic)
     {

@@ -4,7 +4,7 @@ using System;
 
 public abstract class ThumbnailPanel<T> : MonoBehaviour where T : class
 {
-    [SerializeField] protected Image thumbnailImage;
+    [SerializeField] protected RawImage thumbnailImage;
     
     protected T data;
 
@@ -19,7 +19,7 @@ public abstract class ThumbnailPanel<T> : MonoBehaviour where T : class
         data = null;
         if (thumbnailImage != null)
         {
-            thumbnailImage.sprite = null;
+            thumbnailImage.texture = null;
         }
     }
 
