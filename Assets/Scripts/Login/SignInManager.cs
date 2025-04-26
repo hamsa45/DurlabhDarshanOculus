@@ -15,7 +15,7 @@ public class SignInManager : MonoBehaviour
     TMP_InputField userName, password;
     AuthService authService;
 
-    public CanvasGroup logInWarningPanel;
+    public GameObject logInWarningPanel;
 
     public static LoginResponse testresponse;
 
@@ -48,7 +48,7 @@ public class SignInManager : MonoBehaviour
     {
         if(Validate())
         {
-            logInWarningPanel.gameObject.SetActive(true);
+            logInWarningPanel.SetActive(true);
             loaderXR.StopLoader();
         }
         else
@@ -72,7 +72,7 @@ public class SignInManager : MonoBehaviour
                 loginDto.password = "4222";*/
         loaderXR.StartLoader();
         authService.login(loginDto, handleLoginResponse, ex=> {
-            logInWarningPanel.gameObject.SetActive(false);
+            logInWarningPanel.SetActive(false);
             ToastManager.Toast.ErrorToast(ex.message);
             loaderXR.StopLoader();
             Logs.Log(ex.message);
