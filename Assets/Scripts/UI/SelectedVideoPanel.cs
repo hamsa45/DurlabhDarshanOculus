@@ -16,6 +16,8 @@ public class SelectedVideoPanel : MonoBehaviour
 {
     public static SelectedVideoPanel instance;
 
+    [SerializeField] private Texture defaultTexture;
+
     [Header("Texts")]
     [SerializeField] private TextMeshProUGUI videoNameText;
     [SerializeField] private TextMeshProUGUI videoLocationText;
@@ -112,6 +114,9 @@ public class SelectedVideoPanel : MonoBehaviour
                 }
                 loader.setUp(videoThumbnailImage, url);
                 await loader.StartLoadingImage();
+                if(videoThumbnailImage.texture == null){
+                    videoThumbnailImage.texture = defaultTexture;
+                }
                 if(autoAdjustImage != null){
                     autoAdjustImage.adjustImage();
                 }
