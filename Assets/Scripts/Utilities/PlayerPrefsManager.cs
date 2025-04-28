@@ -1,7 +1,22 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class PlayerPrefsManager
 {
+
+    public static void SaveSelectedShowID(string showID)
+    {
+        if (string.IsNullOrEmpty(showID)) return;
+
+        PlayerPrefs.SetString(PlayerPrefsConst.SELECTED_SHOW_ID, showID);
+        PlayerPrefs.Save();
+    }
+
+    public static string LoadSelectedShowID()
+    {
+        return PlayerPrefs.GetString(PlayerPrefsConst.SELECTED_SHOW_ID, "");
+    }
+
     // Category related methods
     public static void SaveSelectedCategory(string category)
     {

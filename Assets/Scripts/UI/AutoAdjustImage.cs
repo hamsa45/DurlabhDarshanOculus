@@ -7,10 +7,8 @@ public class AutoAdjustImage : MonoBehaviour
     public Graphic targetGraphic;  // Reference to the Image or RawImage component you want to adjust
     private AspectRatioFitter aspectRatioFitter;
 
-
     public void adjustImage(Graphic targetGraphic)
     {
-        this.targetGraphic = targetGraphic;
         if (targetGraphic != null)
         {
             aspectRatioFitter = targetGraphic.gameObject.GetComponent<AspectRatioFitter>();
@@ -51,7 +49,7 @@ public class AutoAdjustImage : MonoBehaviour
         }
     }
 
-  public void adjustImage()
+  public void adjustImage(string text)
     {
         if (targetGraphic != null)
         {
@@ -85,6 +83,8 @@ public class AutoAdjustImage : MonoBehaviour
 
                 // Optionally, you can set the target's RectTransform size
                 AdjustRectTransform(imageWidth, imageHeight);
+
+                Debug.Log(text);
             }
             else
             {

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
+using System.Threading.Tasks;
 
 public enum VideoState
 {
@@ -16,6 +17,7 @@ public class SelectedVideoPanel : MonoBehaviour
 {
     public static SelectedVideoPanel instance;
 
+    [SerializeField] private AutoAdjustImage autoAdjustImage;
     [SerializeField] private Texture defaultTexture;
 
     [Header("Texts")]
@@ -49,7 +51,6 @@ public class SelectedVideoPanel : MonoBehaviour
     [SerializeField] private Image downloadingProgressBar;
 
     private VideoState videoState = VideoState.NotDownloaded;
-    private AutoAdjustImage autoAdjustImage;
 
     void Awake()
     {
@@ -59,22 +60,17 @@ public class SelectedVideoPanel : MonoBehaviour
         instance = this;
     }
 
-    void Start()
-    {
-        videoThumbnailImage.TryGetComponent<AutoAdjustImage>(out AutoAdjustImage auto_);
-        if(auto_ == null) auto_ = videoThumbnailImage.AddComponent<AutoAdjustImage>();
-    }
-
     public void SetData(ThumbnailDTO thumbnailDTO)
     {
+
+        if (videoThumbnailImage != null)
+            UpdateSelectedImageImage(thumbnailDTO.thumbnailUrl);
+
         if (videoLocationText != null)
             videoLocationText.text = thumbnailDTO.city;
 
         if (videoDurationText != null)
             videoDurationText.text = VideoThumbnailPanel.VideoDurationFullString(thumbnailDTO.videoDuration);
-
-        if (videoThumbnailImage != null)
-            UpdateSelectedImageImage(thumbnailDTO.thumbnailUrl);
 
         if (videoDescriptionText != null)
             videoDescriptionText.text = thumbnailDTO.description;
@@ -113,12 +109,19 @@ public class SelectedVideoPanel : MonoBehaviour
                     loader = gameObject.AddComponent<ImageLoader>();
                 }
                 loader.setUp(videoThumbnailImage, url);
+
+                Debug.Log($"videoThumbnailImage.texture - {videoThumbnailImage.texture == null}");
                 await loader.StartLoadingImage();
                 if(videoThumbnailImage.texture == null){
                     videoThumbnailImage.texture = defaultTexture;
                 }
+
+                await Task.Delay(100);
+
+                Debug.Log($"autoAdjustImage - {autoAdjustImage == null}");
                 if(autoAdjustImage != null){
-                    autoAdjustImage.adjustImage();
+
+                    autoAdjustImage.adjustImage("Selected Panel");
                 }
     }
     private void CheckVideoState(ThumbnailDTO thumbnailDTO){

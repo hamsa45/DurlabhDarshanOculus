@@ -1027,7 +1027,7 @@ GameObject:
   - component: {fileID: 144707121}
   - component: {fileID: 144707120}
   m_Layer: 0
-  m_Name: Flat Panel
+  m_Name: Mian Canvas Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1522,6 +1522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7330529e3336ea04a9586b5f6c86b676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  autoAdjustImage: {fileID: 0}
   defaultTexture: {fileID: 2800000, guid: f2ce6a67b4d857b4696a857d3c755b3f, type: 3}
   videoNameText: {fileID: 1546398689}
   videoLocationText: {fileID: 95229896}

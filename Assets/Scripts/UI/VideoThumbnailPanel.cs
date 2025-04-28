@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class VideoThumbnailPanel : ThumbnailPanel<ThumbnailDTO>
 {
@@ -24,6 +25,26 @@ public class VideoThumbnailPanel : ThumbnailPanel<ThumbnailDTO>
     {
         if (data != null)
         {
+            try{
+                if (thumbnailImage != null){
+                    gameObject.TryGetComponent<ImageLoader>(out ImageLoader loader);
+                    
+                    if(loader == null){
+                        loader = gameObject.AddComponent<ImageLoader>();
+                    }
+                    loader.setUp(thumbnailImage, data.thumbnailUrl);
+                    await loader.StartLoadingImage();
+                    if(thumbnailImage.texture == null){
+                        thumbnailImage.texture = thumbnailTexture;
+                    }
+                    autoAdjustRawImage.adjustImage(thumbnailImage);
+                }
+            }
+            catch (Exception e){
+                Debug.Log(e);
+            }
+
+
             if (thumbnailLoaderPanel != null)
             {
                 thumbnailLoaderPanel.SetActive(true);
@@ -32,24 +53,10 @@ public class VideoThumbnailPanel : ThumbnailPanel<ThumbnailDTO>
                 videoNameText.text = data.title;
 
             if (videoDurationText != null)
-                videoDurationText.text = VideoDurationFullString(data.videoDuration);
+                videoDurationText.text = VideoDurationString(data.videoDuration);
 
             if (videoLocationText != null)
                 videoLocationText.text = data.city;
-
-            if (thumbnailImage != null){
-                gameObject.TryGetComponent<ImageLoader>(out ImageLoader loader);
-                
-                if(loader == null){
-                    loader = gameObject.AddComponent<ImageLoader>();
-                }
-                loader.setUp(thumbnailImage, data.thumbnailUrl);
-                await loader.StartLoadingImage();
-                if(thumbnailImage.texture == null){
-                    thumbnailImage.texture = thumbnailTexture;
-                }
-                autoAdjustRawImage.adjustImage(thumbnailImage);
-            }
 
             if (thumbnailLoaderPanel != null)
             {

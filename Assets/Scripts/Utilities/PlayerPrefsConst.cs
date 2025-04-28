@@ -9,4 +9,8 @@ public static class PlayerPrefsConst
     public const string IS_MUTE = "IsMute";
     public const string LAST_SELECTED_NAV_PANEL = "LastSelectedNavPanel";
     public const string SELECTED_CATEGORY = "All";
+
+    public readonly static string videosKeyAWSBucketName = "co.techxrdev.durlabhdarshan";
+
+    public const string SELECTED_SHOW_ID = "SelectedShowID";
 }

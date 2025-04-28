@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using System;
+using UnityEngine.Networking;
 
 public class SimpleMediaPlayerUI : MonoBehaviour
 {
@@ -38,6 +39,11 @@ public class SimpleMediaPlayerUI : MonoBehaviour
     
     private bool ifFirstFrameReady = false;
 
+    private string keyAWSObjectId;
+
+    private byte[] keyBytes;
+    private string currentVideoURL = CurrentVideoDataInPlay.currentVideoUrl;
+
     void HandleEvent(MediaPlayer mp, MediaPlayerEvent.EventType eventType, ErrorCode code)
     {
         if(eventType == MediaPlayerEvent.EventType.FirstFrameReady)
@@ -67,6 +73,7 @@ public class SimpleMediaPlayerUI : MonoBehaviour
     void Start()
     {
         if (!mediaPlayer) return;
+
         mediaPlayer.Events.AddListener(HandleEvent);
         playPauseButton.GetComponent<Button>().onClick.AddListener(TogglePlayPause);
         skipForwardButton.onClick.AddListener(() => SeekRelative(skipSeconds));
@@ -84,6 +91,8 @@ public class SimpleMediaPlayerUI : MonoBehaviour
         
         // Set initial play/pause button state
         UpdatePlayPauseButtonState();
+
+        playEncryptedVideo();
     }
 
     public void SetVideoTitle(string title)
@@ -240,8 +249,59 @@ public class SimpleMediaPlayerUI : MonoBehaviour
         // }
     // }
 
+    private void playEncryptedVideo()
+    {
+        keyAWSObjectId = CurrentVideoDataInPlay.thumbnailDTO.highQualityVideoKeyAWSObjectId;
+        StartCoroutine(playvideo());
+    }
+    IEnumerator playvideo()
+    {
+        string keyAWSPresignedUrl = GeneratePresignedURL.getVideoUrl(PlayerPrefsConst.videosKeyAWSBucketName, keyAWSObjectId, 10.0f);
+        yield return new WaitForSeconds(1);
+        StartCoroutine(DownloadKeyFileAndPlayVideo(keyAWSPresignedUrl));
+    }
+
     private void LoadHomeScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
+    }
+
+    IEnumerator DownloadKeyFileAndPlayVideo(string s3PresignedUrl)
+    {
+        //Debug.Log("inside download key and play video couroutine!!");
+        using (UnityWebRequest www = UnityWebRequest.Get(s3PresignedUrl))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                keyBytes = www.downloadHandler.data;
+                //string keyString = www.downloadHandler.text;
+                // Now 'keyBytes' contains the content of the .key file as a byte array
+                //Debug.Log("Key file downloaded successfully!");
+
+                // For example, print the byte values in hexadecimal format
+                //Debug.Log(currentVideoURL+keyString+"Key Bytes (Hex): " + BitConverter.ToString(keyBytes));
+                //Debug.Log("Key Bytes (Hex): " + BitConverter.ToString(keyBytes).Replace("-", ""));
+                if(Application.platform == RuntimePlatform.Android)
+                    mediaPlayer.PlatformOptionsAndroid.keyAuth.overrideDecryptionKey = keyBytes;
+                else
+                    mediaPlayer.PlatformOptionsIOS.keyAuth.overrideDecryptionKey = keyBytes;
+                //Debug.Log("video url is : " + currentVideoURL);
+
+                if (M3U8DownloadManager.Instance.IsPlayingDownloadedFile() && !CurrentVideoDataInPlay.isOptStreamFile)
+				{
+                    Debug.Log("We are playing cache file");
+                    currentVideoURL = M3U8DownloadManager.Instance.GetCurrentPlayingVideoAbsolutePath();
+				}
+                mediaPlayer.OpenMedia(MediaPathType.AbsolutePathOrURL, currentVideoURL, true);
+                //mediaPlayer.PlatformOptionsAndroid.keyAuth.overrideDecryptionKey = keyBytes;
+                //mediaPlayer.Play();
+            }
+            else
+            {
+                Debug.LogError($"Failed to download key file. Error: {www.error}");
+            }
+        }
     }
 }
