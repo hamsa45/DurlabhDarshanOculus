@@ -45,7 +45,7 @@ public class M3U8DownloadManager : MonoBehaviour
     private void CleanupUnfinishedAndOldDownloads(int days)
     {
         string cacheRoot = AppConstants.m3u8CacheFolder;
-        //Debug.Log("---- checking for clean up");
+        Debug.Log("---- checking for clean up");
         try
         {
             if (!Directory.Exists(cacheRoot))
@@ -62,7 +62,7 @@ public class M3U8DownloadManager : MonoBehaviour
             
             foreach (string folder in folders)
             {
-                //Debug.Log("checking cache integrity for " + folder);
+                Debug.Log("checking cache integrity for " + folder);
                 string completeFlagPath = Path.Combine(folder, "complete.flag");
 
                 // Delete folder if flag does not exist (unfinished download)
@@ -70,7 +70,7 @@ public class M3U8DownloadManager : MonoBehaviour
                 {
                     if (onGoingDownloadsList.Contains(folder)) continue;
            
-                    //Debug.Log($"Deleting unfinished download: {folder}");
+                    Debug.Log($"Deleting unfinished download: {folder}");
                     Directory.Delete(folder, true);
                 }
                 else
@@ -83,20 +83,20 @@ public class M3U8DownloadManager : MonoBehaviour
 
                         if (age.TotalDays > days)
                         {
-                            //Debug.Log($"----------Detected & Deleting old cache folder: {folder}");
+                            Debug.Log($"----------Detected & Deleting old cache folder: {folder}");
                             Directory.Delete(folder, true);
                         }
                         else
                         {
                             string folderPath = folder;
                             string fileName = Path.GetFileName(folderPath);
-                            //Debug.Log(fileName);  // Output: MaaShardaDeviJaikaraHD
+                            Debug.Log(fileName);  // Output: MaaShardaDeviJaikaraHD
 
                             if (!downloadedList.Contains(fileName))
 							{
                                 addToDownloadedList(fileName);
                             }
-                            //Debug.Log($"-------{folder} not expired.");
+                            Debug.Log($"-------{folder} not expired.");
                         }
                     }
                 }
@@ -123,7 +123,7 @@ public class M3U8DownloadManager : MonoBehaviour
     {
         if (!ongoingDownloads.ContainsKey(url))
         {
-            Debug.Log("No Download exists in progress.");
+            Logs.Log("No Download exists in progress.");
             //ReattachDownload(url, onProgress, onComplete);
             return;
         }
@@ -212,15 +212,15 @@ public class M3U8DownloadManager : MonoBehaviour
             try
             {
                 Directory.Delete(path, true);  // Recursively delete
-                //Debug.Log($"Deleted directory: {path}");
+                Logs.Log($"Deleted directory: {path}");
             }
             catch (IOException ioEx)
             {
-                Debug.LogError($"IO Exception: {ioEx.Message}");
+                Logs.LogError($"IO Exception: {ioEx.Message}");
             }
             catch (UnauthorizedAccessException uaEx)
             {
-                Debug.LogError($"Access Denied: {uaEx.Message}");
+                Logs.LogError($"Access Denied: {uaEx.Message}");
             }
             catch (Exception ex)
             {

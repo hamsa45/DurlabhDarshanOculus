@@ -605,8 +605,9 @@ public class HomeManager : MonoBehaviour
                 
 			    foreach (var thumbnail in jsonData)
 			    {
-			    	//if (AppConstants.disactiveVideoShowIds.Contains(thumbnail.Key) || thumbnail.Key == "5") continue;
+			    	if (AppConstants.disactiveVideoShowIds.Contains(thumbnail.Key) || thumbnail.Key == "5") continue;
 			    	ThumbnailDTO thumbnailDTO = convertThumbnailDatatoThumbnailDTO(thumbnail.Value, thumbnail.Key);
+                    addUrlFileName(thumbnailDTO.showUrls.high, thumbnailDTO.title, thumbnailDTO.show_id);
                     Logs.Log(thumbnailDTO.toString());
 			    	// updateDeviceSupportedQuality(thumbnailDTO);
 			    	// fillAndInstantiateThumbnailData(thumbnailDTO);
@@ -624,6 +625,13 @@ public class HomeManager : MonoBehaviour
             Logs.LogWarning("Error loading the video data from json");
             loadFromResources();
         }
+    }
+
+    private void addUrlFileName(string url, string title, string show_id)
+    {
+        string fileName = title.Replace(" ", "");
+        string urlFolderName = fileName + "_" + show_id;
+        M3U8DownloadManager.Instance.updateUrlFileName(url, urlFolderName);
     }
 
     private void loadFromResources()

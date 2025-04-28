@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 using System.Threading.Tasks;
+using System;
 
 public enum VideoState
 {
@@ -79,24 +80,24 @@ public class SelectedVideoPanel : MonoBehaviour
             videoNameText.text = thumbnailDTO.title;
 
         if (downloadButton != null)
-            downloadButton.onClick.AddListener(() => DownloadVideo(thumbnailDTO));
+            downloadButton.onClick.AddListener(() => onClickDownloadButton(thumbnailDTO));
 
         if (downloadCancelButton != null)
-            downloadCancelButton.onClick.AddListener(() => CancelDownload(thumbnailDTO));
+            downloadCancelButton.onClick.AddListener(() => onClickDownloadCancelButton(thumbnailDTO));
 
         if (playButton != null)
-            playButton.onClick.AddListener(() => PlayVideo(thumbnailDTO));
+            playButton.onClick.AddListener(() => onClickPlayButton(thumbnailDTO));
 
         if (deleteButton != null)
-            deleteButton.onClick.AddListener(() => DeleteVideo(thumbnailDTO));
+            deleteButton.onClick.AddListener(() => onClickDeleteDownloadButton(thumbnailDTO));
 
         if (backButton != null)
-            backButton.onClick.AddListener(() => BackButton());
+            backButton.onClick.AddListener(() => onClickBackButton());
 
         if (videoSizeText != null)
             videoSizeText.text = thumbnailDTO.HighQualityMediaSize;
         
-        CheckVideoState(thumbnailDTO);
+        updateDownloadStatus(thumbnailDTO);
         StartCoroutine(UpdateSelectedVideo());
     }
 
@@ -110,24 +111,107 @@ public class SelectedVideoPanel : MonoBehaviour
                 }
                 loader.setUp(videoThumbnailImage, url);
 
-                Debug.Log($"videoThumbnailImage.texture - {videoThumbnailImage.texture == null}");
                 await loader.StartLoadingImage();
                 if(videoThumbnailImage.texture == null){
                     videoThumbnailImage.texture = defaultTexture;
                 }
 
-                await Task.Delay(100);
+                //await Task.Delay(100);
 
-                Debug.Log($"autoAdjustImage - {autoAdjustImage == null}");
                 if(autoAdjustImage != null){
 
                     autoAdjustImage.adjustImage("Selected Panel");
                 }
     }
-    private void CheckVideoState(ThumbnailDTO thumbnailDTO){
-
-        // Check if the video is downloaded
+    private void updateDownloadStatus(ThumbnailDTO thumbnailDTO)
+    {
+        //throw new NotImplementedException();
+        if(thumbnailDTO.showUrls.high != null){
+            string url = thumbnailDTO.showUrls.high;
+            if(M3U8DownloadManager.Instance.HasDownload(url))
+            {
+                //confirm that download in on going
+                subscribeToDownloadCallbacks(url);
+                handleDownloadProgress();
+                updatedDownloadProgress(M3U8DownloadManager.Instance.GetDownloadItem(url).getCurrentProgress());
+            }
+            else if (M3U8DownloadManager.Instance.IsDownloaded(url))
+            {
+                handleDownloadCompleted(url);
+            }
+            else
+            {
+                handleDownloadNotDownloaded();
+            }
+        }
     }
+
+    private void subscribeToDownloadCallbacks(string url)
+    {
+        if (!M3U8DownloadManager.Instance.HasDownload(url)) return;
+
+        var downloadItem = M3U8DownloadManager.Instance.GetDownloadItem(url);
+
+        // Unsubscribe first to prevent duplicate subscriptions
+        unsubscribeFromDownloadCallbacks(url);
+
+        // Subscribe to events
+        downloadItem.DownloadProgress += updatedDownloadProgress;
+        downloadItem.DownloadCompleted += handleDownloadCompleted;
+        downloadItem.DownloadInterrupted += handleDownloadInterrupted;
+
+    }
+
+    /// <summary>
+    /// Unsubscribes a MediaQualityCard from download callbacks.
+    /// </summary>
+    private void unsubscribeFromDownloadCallbacks(string url)
+    {
+        if (!M3U8DownloadManager.Instance.HasDownload(url)) return;
+
+        var downloadItem = M3U8DownloadManager.Instance.GetDownloadItem(url);
+
+        // Unsubscribe from events
+        downloadItem.DownloadProgress -= updatedDownloadProgress;
+        downloadItem.DownloadCompleted -= handleDownloadCompleted;
+        downloadItem.DownloadInterrupted -= handleDownloadInterrupted;
+
+        //Debug.Log($"Unsubscribed from download callbacks for {url}");
+    }
+
+    private void updatedDownloadProgress(float progress)
+    {
+        if(downloadingProgressBar != null)
+            downloadingProgressBar.fillAmount = progress;
+
+        if(downloadingProgressText != null)
+            downloadingProgressText.text = $"{progress * 100:0.00}%";
+    }
+
+    private void handleDownloadInterrupted(string obj)
+    {
+        videoState = VideoState.NotDownloaded;
+        UpdateUI();
+    }
+
+    private void handleDownloadCompleted(string obj)
+    {
+        videoState = VideoState.Downloaded;
+        UpdateUI();
+    }
+
+    private void handleDownloadProgress()
+    {
+        videoState = VideoState.Downloading;
+        UpdateUI();
+    }
+
+    private void handleDownloadNotDownloaded()
+    {
+        videoState = VideoState.NotDownloaded;
+        UpdateUI();
+    }
+
 
     public IEnumerator UpdateSelectedVideo()
     {
@@ -147,36 +231,84 @@ public class SelectedVideoPanel : MonoBehaviour
         Downloededpanel.SetActive(videoState == VideoState.Downloaded);
     }
 
-    private void OnDownloadProgress(float progress)
-    {
-        if (downloadingProgressBar != null)
-            downloadingProgressBar.fillAmount = progress;
+    // private void OnDownloadProgress(float progress)
+    // {
+    //     if (downloadingProgressBar != null)
+    //         downloadingProgressBar.fillAmount = progress;
 
-        if (downloadingProgressText != null)
-            downloadingProgressText.text = $"{progress * 100}%";
+    //     if (downloadingProgressText != null)
+    //         downloadingProgressText.text = $"{progress * 100}%";
+    // }
+
+    private void onClickDownloadButton(ThumbnailDTO thumbnailDTO)
+    {
+        // Download the video
+
+        //set the video state to downloading
+        handleDownloadProgress();
+
+        //start the download, but confirm internet connection
+        NetworkMonitor.Instance.CheckInternetConntection(isConnected =>
+        {
+            if (!isConnected)
+			{
+                //Debug.LogWarning("Internet connection is Not available.");
+                ToastManager.Toast.ErrorToast("Internet connection is Not available.");
+                handleDownloadNotDownloaded();
+                return;
+            }
+
+            M3U8DownloadManager.Instance.StartDownload(thumbnailDTO.showUrls.high);
+            subscribeToDownloadCallbacks(thumbnailDTO.showUrls.high);
+        });
+
     }
 
-    private void DownloadVideo(ThumbnailDTO thumbnailDTO)
-    {
-        // Download the video           
-    }
-
-    private void CancelDownload(ThumbnailDTO thumbnailDTO)
+    private void onClickDownloadCancelButton(ThumbnailDTO thumbnailDTO)
     {
         // Cancel the download
+
+        //inform the manager to cancel the download
+        M3U8DownloadManager.Instance.StopDownload(thumbnailDTO.showUrls.high);
+
+        //unsubscribe from the download callbacks
+        unsubscribeFromDownloadCallbacks(thumbnailDTO.showUrls.high);
+
+        //set the video state to not downloaded
+        handleDownloadNotDownloaded();
     }
 
-    private void PlayVideo(ThumbnailDTO thumbnailDTO) 
+    private void onClickPlayButton(ThumbnailDTO thumbnailDTO) 
     {
         // Play the video
+        //set this video data to current playing video data
+        setCurrentVideoData(thumbnailDTO);
+
+        //play the video
     }
 
-    private void DeleteVideo(ThumbnailDTO thumbnailDTO)
+    private void setCurrentVideoData(ThumbnailDTO thumbnailDTO)
+    {
+        CurrentVideoDataInPlay.thumbnailDTO = thumbnailDTO;
+        CurrentVideoDataInPlay.currentVideoUrl = thumbnailDTO.showUrls.high;
+        CurrentVideoDataInPlay.isLocalFile = true;
+        CurrentVideoDataInPlay.isOptStreamFile = false;
+    }
+
+    private void onClickDeleteDownloadButton(ThumbnailDTO thumbnailDTO)
     {
         // Delete the video
+        //inform manager to delete the video
+        M3U8DownloadManager.Instance.Delete(thumbnailDTO.showUrls.high);
+
+        //unsubscribe from the download callbacks
+        unsubscribeFromDownloadCallbacks(thumbnailDTO.showUrls.high);
+
+        //set the video state to not downloaded
+        handleDownloadNotDownloaded();
     }
 
-    private void BackButton()
+    private void onClickBackButton()
     {
         UIManagerMono.instance.ShowVideoListPanel();
 
