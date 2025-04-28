@@ -51,6 +51,48 @@ public class AutoAdjustImage : MonoBehaviour
         }
     }
 
+  public void adjustImage()
+    {
+        if (targetGraphic != null)
+        {
+            aspectRatioFitter = targetGraphic.gameObject.GetComponent<AspectRatioFitter>();
+            if (aspectRatioFitter == null)
+            {
+                aspectRatioFitter = targetGraphic.gameObject.AddComponent<AspectRatioFitter>();
+            }
+
+            // Get the texture based on the component type
+            Texture texture = null;
+            if (targetGraphic is RawImage rawImage)
+            {
+                texture = rawImage.texture;
+            }
+            else if (targetGraphic is Image image)
+            {
+                texture = image.mainTexture;
+            }
+
+            if (texture != null)
+            {
+                float imageWidth = texture.width;
+                float imageHeight = texture.height;
+
+                // Set the aspect ratio of the AspectRatioFitter
+                aspectRatioFitter.aspectRatio = imageWidth / imageHeight;
+
+                // Adjust the aspect mode based on the comparison between the image and screen aspect ratios
+                SetAspectRatioFitterMode(imageWidth, imageHeight);
+
+                // Optionally, you can set the target's RectTransform size
+                AdjustRectTransform(imageWidth, imageHeight);
+            }
+            else
+            {
+                Debug.LogError("Graphic component texture is missing.");
+            }
+        }
+    }
+
     void SetAspectRatioFitterMode(float imageWidth, float imageHeight)
     {
         aspectRatioFitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;

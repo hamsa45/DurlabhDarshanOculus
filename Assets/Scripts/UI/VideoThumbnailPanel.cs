@@ -32,7 +32,7 @@ public class VideoThumbnailPanel : ThumbnailPanel<ThumbnailDTO>
                 videoNameText.text = data.title;
 
             if (videoDurationText != null)
-                videoDurationText.text = VideoDurationString(data.videoDuration);
+                videoDurationText.text = VideoDurationFullString(data.videoDuration);
 
             if (videoLocationText != null)
                 videoLocationText.text = data.city;
@@ -59,9 +59,17 @@ public class VideoThumbnailPanel : ThumbnailPanel<ThumbnailDTO>
     }
 
     public static string VideoDurationString(int videoDuration){
+        Debug.Log("Video Duration" + videoDuration);
         int minutes = (videoDuration % 3600) / 60;
         int seconds = videoDuration % 60;
         return $"{minutes}:{seconds}";
+    }
+
+    public static string VideoDurationFullString(int videoDuration){
+        Debug.Log("Video Duration" + videoDuration);
+        int minutes = (videoDuration % 3600) / 60;
+        int seconds = videoDuration % 60;
+        return $"{minutes} Min {seconds} Sec";
     }
 
     private void Start()

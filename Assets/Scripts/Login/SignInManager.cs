@@ -19,13 +19,21 @@ public class SignInManager : MonoBehaviour
 
     public static LoginResponse testresponse;
 
-    public static LoaderXR loaderXR;
+    public GameObject loaderXR;
 
     LoginResponse savedLoginResponse = new LoginResponse();
 
     private void Awake()
     {
 
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            LogIn();
+        }
     }
 
     public SignInManager()
@@ -39,9 +47,6 @@ public class SignInManager : MonoBehaviour
         Screen.orientation = ScreenOrientation.Portrait;
         userName = GameObject.FindGameObjectWithTag("username").GetComponent<TMP_InputField>();
         password = GameObject.FindGameObjectWithTag("password").GetComponent<TMP_InputField>();
-
-        loaderXR = new LoaderXR();
-        loaderXR.CreateLoader();
     }
 
     private void SubmitUsernamePassword()
@@ -49,17 +54,17 @@ public class SignInManager : MonoBehaviour
         if(Validate())
         {
             logInWarningPanel.SetActive(true);
-            loaderXR.StopLoader();
+            loaderXR.SetActive(false);
         }
         else
         {
-            loaderXR.StopLoader();
+            loaderXR.SetActive(false);
         }
     }
 
     public void LogInWarning()
     {
-        loaderXR.StartLoader();
+        loaderXR.SetActive(true);
         sendLoginDetails();
     }
 
@@ -70,11 +75,11 @@ public class SignInManager : MonoBehaviour
         loginDto.password = password.text;
         /*        loginDto.email = "abhishekprabhat@debugfactory.com";
                 loginDto.password = "4222";*/
-        loaderXR.StartLoader();
+        loaderXR.SetActive(true);
         authService.login(loginDto, handleLoginResponse, ex=> {
             logInWarningPanel.SetActive(false);
             ToastManager.Toast.ErrorToast(ex.message);
-            loaderXR.StopLoader();
+            loaderXR.SetActive(false);
             Logs.Log(ex.message);
         });
     }
@@ -93,7 +98,7 @@ public class SignInManager : MonoBehaviour
     }
     public void handleLoginResponse(LoginResponse loginResponse)
     {
-        //loaderXR.StopLoader();
+        //loaderXR.SetActive(false);
 
         testresponse = loginResponse;
 
@@ -122,6 +127,7 @@ public class SignInManager : MonoBehaviour
             {
                 //FadeOut.Play("");
 
+                Debug.LogWarning("Logged in Successfully");
                 savedLoginResponse.access_token = loginResponse.access_token;
                 savedLoginResponse.token_type = loginResponse.token_type;
                 savedLoginResponse.refresh_token = loginResponse.refresh_token;
@@ -133,7 +139,7 @@ public class SignInManager : MonoBehaviour
                 ToastManager.Toast.ErrorToast("Successful Login");
 
                 // SceneManager.LoadScene(AppConstants.Scenes.DeviceSupportCheckAfterLogin);
-                SceneLoader.LoadScene(Scenes.Home);
+                SceneLoader.LoadScene(1);
             }
         }
         catch (XrException e)
@@ -154,7 +160,7 @@ public class SignInManager : MonoBehaviour
         finally
         {
             logInWarningPanel.gameObject.SetActive(false);
-            loaderXR.StopLoader();
+            loaderXR.SetActive(false);
         }
     }
 
@@ -232,26 +238,31 @@ public class SignInManager : MonoBehaviour
 
     public void LogIn()
     {
-        loaderXR.StartLoader();
+        loaderXR.SetActive(true);
 
         StartCoroutine(CheckInternetConnection(isConnected =>
         {
+            Debug.LogWarning("Test" + isConnected + ">>>");
             if (isConnected)
             {
+                Debug.LogWarning("SubmitUsernamePassword >>>");
                 SubmitUsernamePassword();
             }
             else
             {
-                loaderXR.StopLoader();
+                Debug.LogWarning("Internet Not Available> >>");
+                loaderXR.SetActive(false);
                 ToastManager.Toast.ErrorToast("Internet Not Available");
             }
         }));
     }
     public static IEnumerator CheckInternetConnection(Action<bool> action)
     {
+        Debug.Log("Sending web request >>>");
         UnityWebRequest request = new UnityWebRequest("https://google.com");
         DownloadHandler downloadhandler = request.downloadHandler;
         yield return request.SendWebRequest();
+        Debug.Log($"Web Request Result {request.result} >>>");
         if (request.error != null)
         {
             action(false);

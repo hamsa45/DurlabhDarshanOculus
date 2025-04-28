@@ -14,7 +14,6 @@ public class LoginCheck : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         Url.setBaseUrl("https://gateway.techxr.co");
         Url.getNetworkService((iNetworkService) => this.networkService = iNetworkService);
         levelChanger = FindObjectOfType<LevelChanger>();
@@ -48,14 +47,7 @@ public class LoginCheck : MonoBehaviour
                 networkService.setLoginResponse(loginrrr);
                 Debug.Log("Go to home");
 
-                if (PlayerPrefs.GetString("deviceConfigCheckCompleted", "NA") == "true" && !PlayerPrefs.HasKey("deviceSupportAdaptiveStreamVideo"))
-				{
-                    levelChanger.FadeToLevel(4);
-                }
-                else
-				{
-                    levelChanger.FadeToLevel(2);
-                }
+                levelChanger.FadeToLevel(2);
                 //if (!PlayerPrefs.HasKey("ControllerTutorial") || PlayerPrefs.GetInt("ControllerTutorial") == 0)
                 //{
                 //    SceneManager.LoadSceneAsync("ControllerTutorial");

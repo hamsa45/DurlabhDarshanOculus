@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public enum VideoState
 {
@@ -19,9 +20,11 @@ public class SelectedVideoPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI videoNameText;
     [SerializeField] private TextMeshProUGUI videoLocationText;
     [SerializeField] private TextMeshProUGUI videoDurationText;
-    [SerializeField] private TextMeshProUGUI videoDurationDescriptionText;
+    [SerializeField] private TextMeshProUGUI videoDescriptionText;
+
+    [SerializeField] private TextMeshProUGUI videoSizeText;
     
-    [SerializeField] private Image videoThumbnailImage;
+    [SerializeField] private RawImage videoThumbnailImage;
 
     [Header("Panels")]
     [SerializeField] private GameObject NotDownloededpanel;
@@ -44,7 +47,7 @@ public class SelectedVideoPanel : MonoBehaviour
     [SerializeField] private Image downloadingProgressBar;
 
     private VideoState videoState = VideoState.NotDownloaded;
-
+    private AutoAdjustImage autoAdjustImage;
 
     void Awake()
     {
@@ -54,19 +57,25 @@ public class SelectedVideoPanel : MonoBehaviour
         instance = this;
     }
 
+    void Start()
+    {
+        videoThumbnailImage.TryGetComponent<AutoAdjustImage>(out AutoAdjustImage auto_);
+        if(auto_ == null) auto_ = videoThumbnailImage.AddComponent<AutoAdjustImage>();
+    }
+
     public void SetData(ThumbnailDTO thumbnailDTO)
     {
         if (videoLocationText != null)
             videoLocationText.text = thumbnailDTO.city;
 
         if (videoDurationText != null)
-            videoDurationText.text = VideoThumbnailPanel.VideoDurationString(thumbnailDTO.videoDuration);
+            videoDurationText.text = VideoThumbnailPanel.VideoDurationFullString(thumbnailDTO.videoDuration);
 
         if (videoThumbnailImage != null)
-            //videoThumbnailImage.sprite = thumbnailDTO.thumbnail;
+            UpdateSelectedImageImage(thumbnailDTO.thumbnailUrl);
 
-        if (videoDurationDescriptionText != null)
-            videoDurationDescriptionText.text = thumbnailDTO.description;
+        if (videoDescriptionText != null)
+            videoDescriptionText.text = thumbnailDTO.description;
 
         if (videoNameText != null)
             videoNameText.text = thumbnailDTO.title;
@@ -85,17 +94,34 @@ public class SelectedVideoPanel : MonoBehaviour
 
         if (backButton != null)
             backButton.onClick.AddListener(() => BackButton());
-            
+
+        if (videoSizeText != null)
+            videoSizeText.text = thumbnailDTO.HighQualityMediaSize;
+        
         CheckVideoState(thumbnailDTO);
-        UpdateUI();
+        StartCoroutine(UpdateSelectedVideo());
     }
 
+
+    private async void UpdateSelectedImageImage(string url){
+        
+                gameObject.TryGetComponent<ImageLoader>(out ImageLoader loader);
+                
+                if(loader == null){
+                    loader = gameObject.AddComponent<ImageLoader>();
+                }
+                loader.setUp(videoThumbnailImage, url);
+                await loader.StartLoadingImage();
+                if(autoAdjustImage != null){
+                    autoAdjustImage.adjustImage();
+                }
+    }
     private void CheckVideoState(ThumbnailDTO thumbnailDTO){
 
         // Check if the video is downloaded
     }
 
-    public IEnumerator UpdateSelectedVideo(ThumbnailDTO thumbnailDTO)
+    public IEnumerator UpdateSelectedVideo()
     {
         LoadingPanel.SetActive(true);
         MainCanvasGroup.alpha = 0;
@@ -145,5 +171,7 @@ public class SelectedVideoPanel : MonoBehaviour
     private void BackButton()
     {
         UIManagerMono.instance.ShowVideoListPanel();
+
+        Debug.Log("On Back Button Click");
     }
 }
