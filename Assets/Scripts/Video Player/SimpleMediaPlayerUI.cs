@@ -263,7 +263,7 @@ public class SimpleMediaPlayerUI : MonoBehaviour
 
     private void LoadHomeScene()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Home_UI");
     }
 
     IEnumerator DownloadKeyFileAndPlayVideo(string s3PresignedUrl)

@@ -284,6 +284,8 @@ public class SelectedVideoPanel : MonoBehaviour
         //set this video data to current playing video data
         setCurrentVideoData(thumbnailDTO);
 
+        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
+
         //play the video
     }
 

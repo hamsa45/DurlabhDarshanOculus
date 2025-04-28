@@ -95,13 +95,13 @@ public class HomeManager : MonoBehaviour
     private void Awake()
     {   
         initializeHomepage();
-        // authService = AuthService.getInstance();
-        // if (ProjectMetadata.profile != null)
-        // {
-        //     name.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.firstName;
-        //     email.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.email;
-        //     phoneNumber.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.phone.phoneNumber;
-        // }
+        authService = AuthService.getInstance();
+        if (ProjectMetadata.profile != null)
+        {
+            name.GetComponent<TextMeshProUGUI>().text = $"Hi, {ProjectMetadata.profile.firstName}";
+            //email.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.email;
+            //phoneNumber.GetComponent<TextMeshProUGUI>().text = ProjectMetadata.profile.phone.phoneNumber;
+        }
 
         // checkInternetConnectionOnAwake();
         // if(isInternetConnected || NetworkMonitor.Instance.IsConnected)
@@ -853,7 +853,7 @@ public class HomeManager : MonoBehaviour
     {
         authService.logout();
         PlayerPrefs.DeleteAll();
-        SceneLoader.LoadScene(Scenes.Login);
+        SceneLoader.LoadScene(1);
     }
 
     // in app subscription

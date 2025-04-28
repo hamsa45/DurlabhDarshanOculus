@@ -99,7 +99,6 @@ public class VideoPlayer : MonoBehaviour
     private void Update()
     {
         bool input = OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger);
-        Debug.Log("input : " + input);
         if (input)
         {
             MenuPanel.SetActive(!MenuPanel.activeSelf);
@@ -115,7 +114,7 @@ public class VideoPlayer : MonoBehaviour
 
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
         }
     }
 
