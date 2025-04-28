@@ -64,6 +64,7 @@ public class SignInManager : MonoBehaviour
 
     public void LogInWarning()
     {
+        Debug.Log("Heloo");
         loaderXR.SetActive(true);
         sendLoginDetails();
     }
@@ -76,6 +77,8 @@ public class SignInManager : MonoBehaviour
         /*        loginDto.email = "abhishekprabhat@debugfactory.com";
                 loginDto.password = "4222";*/
         loaderXR.SetActive(true);
+
+        Debug.Log(loginDto.email);
         authService.login(loginDto, handleLoginResponse, ex=> {
             logInWarningPanel.SetActive(false);
             ToastManager.Toast.ErrorToast(ex.message);
@@ -100,12 +103,15 @@ public class SignInManager : MonoBehaviour
     {
         //loaderXR.SetActive(false);
 
+        Debug.Log("Logged In");
         testresponse = loginResponse;
 
         ProjectMetadata.profile = loginResponse.profile;
         try
         {
             Logs.Log("Profile: " + loginResponse.profile.firstName);
+
+            Debug.Log("Logged In");
             
             
 
@@ -121,13 +127,14 @@ public class SignInManager : MonoBehaviour
             {
                 Logs.Log("toast : Fatal Error");
                 ToastManager.Toast.ErrorToast("Fatal Error, Please Contact Support");
+
+                Debug.Log("Logged In");
                 //i_Toast_XR.GetComponent<I_Toast_XR1>().ShowToast(false, "Fatal Error, Please Contact Support");
             }
             else
             {
                 //FadeOut.Play("");
 
-                Debug.LogWarning("Logged in Successfully");
                 savedLoginResponse.access_token = loginResponse.access_token;
                 savedLoginResponse.token_type = loginResponse.token_type;
                 savedLoginResponse.refresh_token = loginResponse.refresh_token;
@@ -139,7 +146,7 @@ public class SignInManager : MonoBehaviour
                 ToastManager.Toast.ErrorToast("Successful Login");
 
                 // SceneManager.LoadScene(AppConstants.Scenes.DeviceSupportCheckAfterLogin);
-                SceneLoader.LoadScene(1);
+                SceneLoader.LoadScene(Scenes.Home);
             }
         }
         catch (XrException e)
