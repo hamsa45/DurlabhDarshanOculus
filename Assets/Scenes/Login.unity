@@ -1410,7 +1410,7 @@ GameObject:
   - component: {fileID: 552765164}
   - component: {fileID: 552765163}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Editor Click
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1428,7 +1428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aab0619a024ce974299e99c5896c4f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventCamera: {fileID: 0}
+  eventCamera: {fileID: 1805198309}
   uiLayerMask:
     serializedVersion: 2
     m_Bits: 32
@@ -3986,6 +3986,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f54012181eacade4ea242c65f804720f, type: 3}
+--- !u!20 &1805198309 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2483171112400622654, guid: f54012181eacade4ea242c65f804720f, type: 3}
+  m_PrefabInstance: {fileID: 1805198308}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1821334734
 GameObject:
   m_ObjectHideFlags: 0
