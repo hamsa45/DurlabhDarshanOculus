@@ -6,17 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SplashScreen.unity
-    guid: 89570808853598046bd9126d8066cfc4
-  - enabled: 1
-    path: Assets/Scenes/Login.unity
-    guid: 9cddb214db008cd4c9b906ecde30c6ac
-  - enabled: 1
-    path: Assets/Scenes/Home_UI.unity
-    guid: 59c843bf72542a14da4eb30924a39f78
-  - enabled: 1
-    path: Assets/Scenes/VideoPlayer.unity
-    guid: c607d2a8dadbcea439c6dde29e029356
+    path: Assets/MockUp/UI_Mockup.unity
+    guid: 0cfef882bfdce4f40bbba2b78ad6da84
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: cede7441e0f9bca498532ded35baeb9e, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: e097f6df8ce5c4742bc68a515d391e3b, type: 2}
