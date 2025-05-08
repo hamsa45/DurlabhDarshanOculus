@@ -92,7 +92,7 @@ public class SimpleMediaPlayerUI : MonoBehaviour
         // Set initial play/pause button state
         UpdatePlayPauseButtonState();
 
-        playEncryptedVideo();
+        //playEncryptedVideo();
     }
 
     public void SetVideoTitle(string title)
@@ -135,7 +135,7 @@ public class SimpleMediaPlayerUI : MonoBehaviour
     {
         if (!mediaPlayer || mediaPlayer.Control == null || mediaPlayer.Info == null || !ifFirstFrameReady) return;
 
-        if(OVRInput.GetDown(OVRInput.Button.One) || Input.GetKeyDown(KeyCode.I))
+        if((OVRInput.GetDown(OVRInput.Button.One) || OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger) && videoPlayerControls.alpha < 0.5) || Input.GetKeyDown(KeyCode.I))
         {
             FadeInOutVideoPlayerControls(); 
         }
@@ -242,15 +242,16 @@ public class SimpleMediaPlayerUI : MonoBehaviour
     /// </summary>
     // public void UpdateQualityOptions()
     // {
-        //Forward to settings controller if available
-        // if (settingsController != null)
-        // {
-            // settingsController.UpdateQualityOptions();
-        // }
+    //Forward to settings controller if available
+    // if (settingsController != null)
+    // {
+    // settingsController.UpdateQualityOptions();
+    // }
     // }
 
     private void playEncryptedVideo()
     {
+        Debug.Log(CurrentVideoDataInPlay.thumbnailDTO.highQualityVideoKeyAWSObjectId);
         keyAWSObjectId = CurrentVideoDataInPlay.thumbnailDTO.highQualityVideoKeyAWSObjectId;
         StartCoroutine(playvideo());
     }
@@ -263,7 +264,9 @@ public class SimpleMediaPlayerUI : MonoBehaviour
 
     private void LoadHomeScene()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Home_UI");
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        //UnityEngine.SceneManagement.SceneManager.LoadScene("Home_UI");
     }
 
     IEnumerator DownloadKeyFileAndPlayVideo(string s3PresignedUrl)
