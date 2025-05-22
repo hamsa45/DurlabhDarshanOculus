@@ -226,7 +226,6 @@ GameObject:
   m_Component:
   - component: {fileID: 252576204}
   - component: {fileID: 252576203}
-  - component: {fileID: 252576202}
   m_Layer: 0
   m_Name: IAP manaher
   m_TagString: Untagged
@@ -234,21 +233,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &252576202
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 252576201}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dadc3fc468c62f64883685a8b84c187c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  productContainer: {fileID: 573510646}
-  productButtonPrefab: {fileID: 4924779611411360427, guid: 04c61a304767e9a4c99d23b1dbadbf64, type: 3}
-  statusText: {fileID: 1175002156}
 --- !u!114 &252576203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   availableProducts: []
+  initializeOnAwake: 1
 --- !u!4 &252576204
 Transform:
   m_ObjectHideFlags: 0
