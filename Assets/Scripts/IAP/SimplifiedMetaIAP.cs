@@ -43,18 +43,20 @@ public class SimplifiedMetaIAP : MonoBehaviour
         }
         
         // Initially hide loading indicator
-        if (MetaIAPManager.Instance.loadingIndicator != null)
-            MetaIAPManager.Instance.loadingIndicator.SetActive(false);
+        if (MetaIAPManager.Instance.purchaseLoadingIndicator != null)
+            MetaIAPManager.Instance.purchaseLoadingIndicator.SetActive(false);
     }
     
     IEnumerator CheckOwnershipAfterDelay()
     {
         // Wait for IAP system to initialize
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0f);
         
         if (MetaIAPManager.Instance != null && 
             MetaIAPManager.Instance.DoesUserOwnProduct(productSKU))
         {
+            Debug.Log($"<color=ff0000ff> User Already Purchased {productSKU} </color>");
+
             // Product already owned
             DisablePurchaseButton();
             if (MetaIAPManager.Instance.statusText != null)
@@ -77,8 +79,8 @@ public class SimplifiedMetaIAP : MonoBehaviour
         isProcessing = true;
         
         // Show loading indicator
-        if (MetaIAPManager.Instance.loadingIndicator != null)
-            MetaIAPManager.Instance.loadingIndicator.SetActive(true);
+        if (MetaIAPManager.Instance.purchaseLoadingIndicator != null)
+            MetaIAPManager.Instance.purchaseLoadingIndicator.SetActive(true);
             
         // Update status
         if (MetaIAPManager.Instance.statusText != null)
@@ -99,8 +101,8 @@ public class SimplifiedMetaIAP : MonoBehaviour
         isProcessing = false;
         
         // Hide loading indicator
-        if (MetaIAPManager.Instance.loadingIndicator != null)
-            MetaIAPManager.Instance.loadingIndicator.SetActive(false);
+        if (MetaIAPManager.Instance.purchaseLoadingIndicator != null)
+            MetaIAPManager.Instance.purchaseLoadingIndicator.SetActive(false);
             
         // Update status
         if (MetaIAPManager.Instance.statusText != null)
@@ -118,8 +120,8 @@ public class SimplifiedMetaIAP : MonoBehaviour
         isProcessing = false;
         
         // Hide loading indicator
-        if (MetaIAPManager.Instance.loadingIndicator != null)
-            MetaIAPManager.Instance.loadingIndicator.SetActive(false);
+        if (MetaIAPManager.Instance.purchaseLoadingIndicator != null)
+            MetaIAPManager.Instance.purchaseLoadingIndicator.SetActive(false);
             
         // Update status
         if (MetaIAPManager.Instance.statusText != null)
@@ -136,8 +138,8 @@ public class SimplifiedMetaIAP : MonoBehaviour
         isProcessing = false;
         
         // Hide loading indicator
-        if (MetaIAPManager.Instance.loadingIndicator != null)
-            MetaIAPManager.Instance.loadingIndicator.SetActive(false);
+        if (MetaIAPManager.Instance.purchaseLoadingIndicator != null)
+            MetaIAPManager.Instance.purchaseLoadingIndicator.SetActive(false);
             
         // Update status
         if (MetaIAPManager.Instance.statusText != null)

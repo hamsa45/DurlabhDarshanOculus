@@ -57,13 +57,21 @@ public class MetaIAPManager : MonoBehaviour
     // Product being purchased
     private string currentPurchaseSKU;
 
+    // Events for loading states
+    public event Action OnSubscriptionCheckStarted;
+    public event Action OnSubscriptionCheckCompleted;
+    public event Action OnPurchaseStarted;
+    public event Action OnPurchaseCompleted;
+
     // Initialization status
     private bool isInitialized = false;
     public bool IsInitialized => isInitialized;
 
-    [Header("Loading Indicator")]
+    [Header("Loading Indicators")]
     [Tooltip("Loading indicator object to show during purchase")]
-    public GameObject loadingIndicator;
+    public GameObject purchaseLoadingIndicator;
+    [Tooltip("Loading indicator object to show during subscription status check")]
+    public GameObject subscriptionLoadingIndicator;
     [Tooltip("Optional status text to display messages")]
     public TextMeshProUGUI statusText;
 
@@ -92,6 +100,9 @@ public class MetaIAPManager : MonoBehaviour
     [SerializeField] private bool autoRefreshSubscriptions = true;
 
     private Coroutine subscriptionRefreshCoroutine;
+
+    public bool isPurchasing = false;
+    public bool isCheckingSubscriptions = false;
 
     private void Awake()
     {
@@ -204,6 +215,10 @@ public class MetaIAPManager : MonoBehaviour
             return;
         }
 
+        // Show loading indicator and update status
+        ShowSubscriptionLoader(true);
+        SetStatusText("Checking subscription status...");
+
         // Get current purchases to check subscription status
         IAP.GetViewerPurchases().OnComplete(UpdateSubscriptionStatusCallback);
     }
@@ -213,40 +228,56 @@ public class MetaIAPManager : MonoBehaviour
     /// </summary>
     void UpdateSubscriptionStatusCallback(Message<PurchaseList> message)
     {
-        if (message.IsError)
+        try
         {
-            Debug.LogError($"Failed to get subscription status: {message.GetError().Message}");
-            return;
+            if (message.IsError)
+            {
+                Debug.LogError($"Failed to get subscription status: {message.GetError().Message}");
+                SetStatusText("Failed to check subscription status");
+                return;
+            }
+
+            List<SubscriptionStatus> previousStatuses = new List<SubscriptionStatus>(activeSubscriptions);
+            activeSubscriptions.Clear();
+            subscriptionDictionary.Clear();
+
+            foreach (Purchase purchase in message.Data)
+            {
+                // Check if this purchase is for a subscription we're monitoring
+                if (Array.Exists(subscriptionSKUs, sku => sku == purchase.Sku))
+                {
+                    SubscriptionStatus status = CreateSubscriptionStatus(purchase);
+                    activeSubscriptions.Add(status);
+                    subscriptionDictionary[purchase.Sku] = status;
+
+                    // Check for status changes
+                    CheckForSubscriptionStatusChanges(status, previousStatuses);
+                }
+                else
+                {
+                    // Handle regular purchases
+                    GrantItem(purchase.Sku);
+                }
+            }
+
+            // Check for expired subscriptions
+            CheckForExpiredSubscriptions(previousStatuses);
+
+            OnSubscriptionStatusUpdated?.Invoke(activeSubscriptions);
+
+            // Update status text based on results
+            string statusMessage = activeSubscriptions.Count > 0
+                ? $"Found {activeSubscriptions.Count} active subscription(s)"
+                : "No active subscriptions found";
+            SetStatusText(statusMessage);
+
+            Debug.Log($"Updated subscription status. Active subscriptions: {activeSubscriptions.Count}");
         }
-
-        List<SubscriptionStatus> previousStatuses = new List<SubscriptionStatus>(activeSubscriptions);
-        activeSubscriptions.Clear();
-        subscriptionDictionary.Clear();
-
-        foreach (Purchase purchase in message.Data)
+        finally
         {
-            // Check if this purchase is for a subscription we're monitoring
-            if (Array.Exists(subscriptionSKUs, sku => sku == purchase.Sku))
-            {
-                SubscriptionStatus status = CreateSubscriptionStatus(purchase);
-                activeSubscriptions.Add(status);
-                subscriptionDictionary[purchase.Sku] = status;
-
-                // Check for status changes
-                CheckForSubscriptionStatusChanges(status, previousStatuses);
-            }
-            else
-            {
-                // Handle regular purchases
-                GrantItem(purchase.Sku);
-            }
+            // Always hide the loader
+            ShowSubscriptionLoader(false);
         }
-
-        // Check for expired subscriptions
-        CheckForExpiredSubscriptions(previousStatuses);
-
-        OnSubscriptionStatusUpdated?.Invoke(activeSubscriptions);
-        Debug.Log($"Updated subscription status. Active subscriptions: {activeSubscriptions.Count}");
     }
 
     /// <summary>
@@ -403,6 +434,8 @@ public class MetaIAPManager : MonoBehaviour
             return;
         }
 
+        ShowSubscriptionLoader(true);
+        SetStatusText("Loading products...");
         IAP.GetProductsBySKU(skus).OnComplete(GetProductsCallback);
     }
 
@@ -432,39 +465,48 @@ public class MetaIAPManager : MonoBehaviour
     /// </summary>
     void GetProductsCallback(Message<ProductList> message)
     {
-        if (message.IsError)
+        try
         {
-            Debug.LogError($"Failed to get products: {message.GetError().Message}");
-            return;
-        }
-
-        availableProducts.Clear();
-        productDictionary.Clear();
-
-        foreach (Product product in message.Data)
-        {
-            IAPProduct iapProduct = new IAPProduct
+            if (message.IsError)
             {
-                SKU = product.Sku,
-                Name = product.Name,
-                Description = product.Description,
-                Price = (float)product.Price.AmountInHundredths / 100f,
-                FormattedPrice = product.FormattedPrice,
-                IsSubscription = Array.Exists(subscriptionSKUs, sku => sku == product.Sku)
-            };
-
-            // Determine subscription period if it's a subscription
-            if (iapProduct.IsSubscription)
-            {
-                iapProduct.SubscriptionPeriod = DetermineSubscriptionPeriod(product.Sku);
+                Debug.LogError($"Failed to get products: {message.GetError().Message}");
+                SetStatusText("Failed to load products");
+                return;
             }
 
-            availableProducts.Add(iapProduct);
-            productDictionary[product.Sku] = iapProduct;
-        }
+            availableProducts.Clear();
+            productDictionary.Clear();
 
-        Debug.Log($"Fetched {availableProducts.Count} products");
-        OnProductsFetched?.Invoke(availableProducts);
+            foreach (Product product in message.Data)
+            {
+                IAPProduct iapProduct = new IAPProduct
+                {
+                    SKU = product.Sku,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Price = (float)product.Price.AmountInHundredths / 100f,
+                    FormattedPrice = product.FormattedPrice,
+                    IsSubscription = Array.Exists(subscriptionSKUs, sku => sku == product.Sku)
+                };
+
+                // Determine subscription period if it's a subscription
+                if (iapProduct.IsSubscription)
+                {
+                    iapProduct.SubscriptionPeriod = DetermineSubscriptionPeriod(product.Sku);
+                }
+
+                availableProducts.Add(iapProduct);
+                productDictionary[product.Sku] = iapProduct;
+            }
+
+            SetStatusText($"Loaded {availableProducts.Count} products");
+            Debug.Log($"Fetched {availableProducts.Count} products");
+            OnProductsFetched?.Invoke(availableProducts);
+        }
+        finally
+        {
+            ShowSubscriptionLoader(false);
+        }
     }
 
     /// <summary>
@@ -532,6 +574,8 @@ public class MetaIAPManager : MonoBehaviour
         {
             Debug.Log($"User owns: {purchase.Sku}");
 
+            Debug.Log($"Purchase on: {purchase.GrantTime} \n Expire On:{purchase.ExpirationTime}");
+
             // Check if it's a subscription
             if (Array.Exists(subscriptionSKUs, sku => sku == purchase.Sku))
             {
@@ -561,11 +605,8 @@ public class MetaIAPManager : MonoBehaviour
 
         currentPurchaseSKU = sku;
 
-        if (loadingIndicator != null)
-            loadingIndicator.SetActive(true);
-
-        if (statusText != null)
-            statusText.text = "Processing purchase...";
+        ShowPurchaseLoader(true);
+        SetStatusText("Processing purchase...");
 
         IAP.LaunchCheckoutFlow(sku).OnComplete(ProcessPurchase);
     }
@@ -575,20 +616,23 @@ public class MetaIAPManager : MonoBehaviour
     /// </summary>
     void ProcessPurchase(Message<Purchase> message)
     {
-        if (loadingIndicator != null)
-            loadingIndicator.SetActive(false);
-
-        if (message.IsError)
+        try
         {
-            Debug.LogError($"Purchase failed: {message.GetError().Message}");
-            if (statusText != null)
-                statusText.text = "Purchase failed";
-            OnPurchaseFailed?.Invoke(message.GetError().Message);
-            currentPurchaseSKU = null;
-            return;
-        }
+            if (message.IsError)
+            {
+                Debug.LogError($"Purchase failed: {message.GetError().Message}");
+                SetStatusText("Purchase failed");
+                OnPurchaseFailed?.Invoke(message.GetError().Message);
+                currentPurchaseSKU = null;
+                return;
+            }
 
-        HandleSuccessfulPurchase(message.Data);
+            HandleSuccessfulPurchase(message.Data);
+        }
+        finally
+        {
+            ShowPurchaseLoader(false);
+        }
     }
 
     /// <summary>
@@ -600,8 +644,7 @@ public class MetaIAPManager : MonoBehaviour
         {
             Debug.Log($"Successfully purchased {purchase.Sku}");
 
-            if (statusText != null)
-                statusText.text = "Purchase successful!";
+            SetStatusText("Purchase successful!");
 
             // Check if it's a subscription
             if (Array.Exists(subscriptionSKUs, sku => sku == purchase.Sku))
@@ -659,10 +702,65 @@ public class MetaIAPManager : MonoBehaviour
             return;
         }
 
-        IAP.GetViewerPurchases().OnComplete(GetPurchasesCallback);
+        ShowSubscriptionLoader(true);
+        SetStatusText("Restoring purchases...");
 
-        // Also refresh subscription status
-        RefreshSubscriptionStatus();
+        IAP.GetViewerPurchases().OnComplete((message) => {
+            try
+            {
+                GetPurchasesCallback(message);
+                // Also refresh subscription status
+                RefreshSubscriptionStatus();
+            }
+            finally
+            {
+                ShowSubscriptionLoader(false);
+                SetStatusText("Restore completed");
+            }
+        });
+    }
+
+    /// <summary>
+    /// Helper method to show/hide subscription loading indicator
+    /// </summary>
+    private void ShowSubscriptionLoader(bool show)
+    {
+        isCheckingSubscriptions = show;
+
+        Debug.Log($"isCheckingSubscriptions - {isCheckingSubscriptions}");
+
+        if (subscriptionLoadingIndicator != null)
+            subscriptionLoadingIndicator.SetActive(show);
+
+        if (show)
+            OnSubscriptionCheckStarted?.Invoke();
+        else
+            OnSubscriptionCheckCompleted?.Invoke();
+    }
+
+    /// <summary>
+    /// Helper method to show/hide purchase loading indicator
+    /// </summary>
+    private void ShowPurchaseLoader(bool show)
+    {
+        isPurchasing = show;
+
+        if (purchaseLoadingIndicator != null)
+            purchaseLoadingIndicator.SetActive(show);
+
+        if (show)
+            OnPurchaseStarted?.Invoke();
+        else
+            OnPurchaseCompleted?.Invoke();
+    }
+
+    /// <summary>
+    /// Helper method to set status text safely
+    /// </summary>
+    private void SetStatusText(string text)
+    {
+        if (statusText != null)
+            statusText.text = text;
     }
 
     private void OnDestroy()
