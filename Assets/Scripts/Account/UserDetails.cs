@@ -6,12 +6,9 @@ using UnityEngine.XR;
 
 public class UserDetails : MonoBehaviour
 {
-    public TMPro.TextMeshProUGUI debugText;
-    public TMPro.TextMeshProUGUI debug2Text;
     private void Start()
     {
         GetUserID();
-        GetMetaQuestUserId();
     }
 
 
@@ -24,14 +21,18 @@ public class UserDetails : MonoBehaviour
                 var user = message.Data;
                 string userId = user.ID.ToString();
                 string username = user.OculusID;
-                debugText.text = $"User ID {userId} | User Name {username}";
+
+                AccountPage.ap.SetupUser(user.DisplayName);
+
                 // Store this ID for your database tracking
                 //StoreUserInDatabase(userId, username);
             }
+
+
         });
     }
 
-    void GetMetaQuestUserId()
+/*    void GetMetaQuestUserId()
     {
         Oculus.Platform.Users.GetLoggedInUser().OnComplete(message =>
         {
@@ -45,11 +46,11 @@ public class UserDetails : MonoBehaviour
                 //userId = "guest_" + UnityEngine.Random.Range(1000, 9999); // Fallback
             }
         });
-    }
+    }*/
 
 
 
-    void GetDeviceInfo()
+/*    void GetDeviceInfo()
     {
         var inputDevices = new List<InputDevice>();
         InputDevices.GetDevices(inputDevices);
@@ -62,5 +63,5 @@ public class UserDetails : MonoBehaviour
                 // Use this along with user authentication
             }
         }
-    }
+    }*/
 }
