@@ -139,61 +139,6 @@ public class MetaIAPManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Fetch a single product by SKU
-    /// </summary>
-    public void FetchSingleProduct(string sku)
-    {
-        if (!isInitialized)
-        {
-            Debug.LogWarning("Trying to fetch product before initialization. Queue this request.");
-            OnInitializeSuccess += () => FetchSingleProduct(sku);
-            return;
-        }
-
-        // Check if we already have this product cached
-        if (productDictionary.ContainsKey(sku))
-        {
-            OnSingleProductFetched?.Invoke(productDictionary[sku]);
-            return;
-        }
-
-        // Fetch from server
-        IAP.GetProductsBySKU(new string[] { sku }).OnComplete(GetSingleProductCallback);
-    }
-
-    /// <summary>
-    /// Callback for retrieving available products
-    /// </summary>
-    void GetProductsCallback(Message<ProductList> message)
-    {
-        if (message.IsError)
-        {
-            Debug.LogError($"Failed to get products: {message.GetError().Message}");
-            return;
-        }
-
-        availableProducts.Clear();
-        productDictionary.Clear();
-
-        foreach (Product product in message.Data)
-        {
-            IAPProduct iapProduct = new IAPProduct
-            {
-                SKU = product.Sku,
-                Name = product.Name,
-                Description = product.Description,
-                Price = (float)product.Price.AmountInHundredths / 100f,
-                FormattedPrice = product.FormattedPrice
-            };
-            availableProducts.Add(iapProduct);
-            productDictionary[product.Sku] = iapProduct;
-        }
-
-        Debug.Log($"Fetched {availableProducts.Count} products");
-        OnProductsFetched?.Invoke(availableProducts);
-    }
-
-    /// <summary>
     /// Callback for retrieving a single product
     /// </summary>
     void GetSingleProductCallback(Message<ProductList> message)
