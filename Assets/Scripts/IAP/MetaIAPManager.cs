@@ -9,6 +9,7 @@ using TMPro;
 /// <summary>
 /// An enhanced IAP manager for Meta Quest using the Meta XR Platform SDK
 /// Supports both single-product purchases and multi-product listing
+/// Uses in-memory storage instead of persistent storage
 /// </summary>
 public class MetaIAPManager : MonoBehaviour
 {
@@ -29,6 +30,9 @@ public class MetaIAPManager : MonoBehaviour
 
     // Dictionary for quick product lookup by SKU
     private Dictionary<string, IAPProduct> productDictionary = new Dictionary<string, IAPProduct>();
+
+    // In-memory storage for owned products (replaces PlayerPrefs)
+    private HashSet<string> ownedProducts = new HashSet<string>();
 
     // Product being purchased
     private string currentPurchaseSKU;
@@ -56,10 +60,6 @@ public class MetaIAPManager : MonoBehaviour
 
     private void Awake()
     {
-
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save();
-
         // Singleton pattern
         if (Instance == null)
         {
@@ -83,6 +83,9 @@ public class MetaIAPManager : MonoBehaviour
     /// </summary>
     public void Initialize()
     {
+        // Clear owned products on initialization
+        ownedProducts.Clear();
+
         // Initialize the platform SDK
         try
         {
@@ -276,7 +279,6 @@ public class MetaIAPManager : MonoBehaviour
             return;
         }
 
-
         HandleSuccessfulPurchase(message.Data);
     }
 
@@ -303,11 +305,10 @@ public class MetaIAPManager : MonoBehaviour
     /// <param name="sku">The SKU of the purchased item</param>
     private void GrantItem(string sku)
     {
-        // Store the purchase persistently
-        PlayerPrefs.SetInt($"Purchase_{sku}", 1);
-        PlayerPrefs.Save();
+        // Store the purchase in memory only
+        ownedProducts.Add(sku);
 
-        Debug.Log($"Item {sku} granted to user");
+        Debug.Log($"Item {sku} granted to user (stored in memory)");
     }
 
     /// <summary>
@@ -317,7 +318,45 @@ public class MetaIAPManager : MonoBehaviour
     /// <returns>True if the user owns the product</returns>
     public bool DoesUserOwnProduct(string sku)
     {
-        return PlayerPrefs.GetInt($"Purchase_{sku}", 0) == 1;
+        return ownedProducts.Contains(sku);
+    }
+
+    /// <summary>
+    /// Get all owned products
+    /// </summary>
+    /// <returns>A copy of the owned products set</returns>
+    public HashSet<string> GetOwnedProducts()
+    {
+        return new HashSet<string>(ownedProducts);
+    }
+
+    /// <summary>
+    /// Manually add a product to owned products (for testing or special cases)
+    /// </summary>
+    /// <param name="sku">The SKU to add</param>
+    public void AddOwnedProduct(string sku)
+    {
+        ownedProducts.Add(sku);
+        Debug.Log($"Manually added {sku} to owned products");
+    }
+
+    /// <summary>
+    /// Remove a product from owned products (for testing or special cases)
+    /// </summary>
+    /// <param name="sku">The SKU to remove</param>
+    public void RemoveOwnedProduct(string sku)
+    {
+        ownedProducts.Remove(sku);
+        Debug.Log($"Removed {sku} from owned products");
+    }
+
+    /// <summary>
+    /// Clear all owned products
+    /// </summary>
+    public void ClearOwnedProducts()
+    {
+        ownedProducts.Clear();
+        Debug.Log("Cleared all owned products from memory");
     }
 
     /// <summary>
