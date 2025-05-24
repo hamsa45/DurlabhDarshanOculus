@@ -56,6 +56,10 @@ public class MetaIAPManager : MonoBehaviour
 
     private void Awake()
     {
+
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+
         // Singleton pattern
         if (Instance == null)
         {
@@ -234,6 +238,8 @@ public class MetaIAPManager : MonoBehaviour
         Debug.Log($"User has {message.Data.Count} previous purchases");
         foreach (Purchase purchase in message.Data)
         {
+            AccountPage.ap.SetSubscriptionStatus(true);
+            AccountPage.ap.SetUpSubscriptionText(purchase.ExpirationTime.ToString("dd-mm-yyyy"));
             Debug.Log($"User owns: {purchase.Sku}");
             // Process existing purchases (e.g., restore purchases functionality)
             GrantItem(purchase.Sku);
@@ -269,6 +275,7 @@ public class MetaIAPManager : MonoBehaviour
             currentPurchaseSKU = null;
             return;
         }
+
 
         HandleSuccessfulPurchase(message.Data);
     }

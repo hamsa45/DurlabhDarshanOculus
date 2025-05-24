@@ -25,6 +25,8 @@ public class UserDetails : MonoBehaviour
                 string userId = user.ID.ToString();
                 string username = user.OculusID;
                 debugText.text = $"User ID {userId} | User Name {username}";
+                AccountPage.ap.SetupUser(username);
+
                 // Store this ID for your database tracking
                 //StoreUserInDatabase(userId, username);
             }

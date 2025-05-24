@@ -50,7 +50,7 @@ public class SimplifiedMetaIAP : MonoBehaviour
     IEnumerator CheckOwnershipAfterDelay()
     {
         // Wait for IAP system to initialize
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.25f);
         
         if (MetaIAPManager.Instance != null && 
             MetaIAPManager.Instance.DoesUserOwnProduct(productSKU))
@@ -59,6 +59,8 @@ public class SimplifiedMetaIAP : MonoBehaviour
             DisablePurchaseButton();
             if (MetaIAPManager.Instance.statusText != null)
                 MetaIAPManager.Instance.statusText.text = "Already purchased";
+
+            Debug.Log($"Already purchased: {productSKU}");
         }
         else
         {
